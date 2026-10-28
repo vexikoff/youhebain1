@@ -138,7 +138,7 @@ def load_game():
     except FileNotFoundError:
         return False
 
-nazvanie = "Youhe Bain 1: Others' Сircumstances"
+nazvanie = "Youhe Bain 1: Others' Circumstances"
 
 for i in range(6):
     os.system('cls' if os.name == 'nt' else 'clear')
