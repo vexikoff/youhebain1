@@ -87,13 +87,19 @@ def save_game():
         "dike": dike,
         "juing": juing,
         "daytolya": daytolya,
-        "gamecorpscam": gamecorpscam
+        "gamecorpscam": gamecorpscam,
+        "cdis": cdis,
+        "cdiss": cdiss,
+        "vexi": vexi,
+        "knj": knj,
+        "sport": sport,
+        "tolya22": tolya22
     }
     with open("save.json", "w") as f:
         json.dump(save_data, f)
 
 def load_game():
-    global ochko, pomit, pomitp, daytolya, musor, gamecorpscam, dro, igr, drc, dss, rib, juing, rrib, opencr, gamecorp, dike, day, posilka, data_base, chh, dayav, ddv, mmv, dayav2, mmv2, imya, gvozd, police, tolea_sdan, psiholog, paranoya_day, paranoya_shown, koncovka_active, mearephone, tolya_dialog, path_tolya, path_police
+    global ochko, pomit, sport, pomitp, tolya22, daytolya, musor, cdis, vexi, cdiss, gamecorpscam, dro, igr, drc, dss, rib, juing, rrib, opencr, gamecorp, dike, day, posilka, data_base, chh, dayav, ddv, mmv, dayav2, mmv2, imya, gvozd, police, tolea_sdan, psiholog, paranoya_day, paranoya_shown, koncovka_active, mearephone, tolya_dialog, path_tolya, path_police, knj
     try:
         with open("save.json", "r") as f:
             save_data = json.load(f)
@@ -134,6 +140,12 @@ def load_game():
             juing = save_data.get("juing", 0)
             daytolya = save_data.get("daytolya", 0)
             gamecorpscam = save_data.get("gamecorpscam", 0)
+            cdis = save_data.get("cdis", 0)
+            cdiss = save_data.get("cdiss", 0)
+            vexi = save_data.get("vexi", 0)
+            knj = save_data.get("knj", 0)
+            sport = save_data.get("sport", 0)
+            tolya22 = save_data.get("tolya22", 0)
             return True
     except FileNotFoundError:
         return False
@@ -215,6 +227,11 @@ daytolya = 0
 domtolya = 0
 gamecorpscam = 0
 cdis = 0
+cdiss = 0
+vexi = 0
+knj = 0
+sport = 0
+tolya22 = 0
 cooldowns = {
     "pomit": 0,
     "pomitp": 0,
@@ -492,7 +509,7 @@ def koncovka_notdata():
     os._exit(0)
 
 async def main():
-    global pomit, pomitp, dike, musor, dro, cdis, igr, dss, drc, ochko, zvonok, zvv, rib, rrib, opencr, gamecorp, day, posilka, data_base, chh, dayav, dayav2, mmv, mmv2, imya, ddv, gvozd, in_action, tolea_sdan, psiholog, paranoya_day, paranoya_shown, koncovka_active, mearephone, tolya_dialog, path_tolya, path_police, police
+    global pomit, pomitp, dike, musor, sport, vexi, dro, cdis, cdiss, igr, dss, drc, ochko, zvonok, zvv, rib, rrib, opencr, gamecorp, day, posilka, data_base, chh, dayav, dayav2, mmv, mmv2, imya, ddv, gvozd, in_action, tolea_sdan, psiholog, paranoya_day, paranoya_shown, koncovka_active, mearephone, tolya_dialog, path_tolya, path_police, police, knj
     
     global cooldowns
     cooldowns["call"] = time.time() + random.uniform(15.0, 40.0)
@@ -568,6 +585,10 @@ async def main():
                 available_calls.append(9)
             if day >= 4 and cdis == 0:
                 available_calls.append(10)
+            if day >= 1 and cdiss == 0:
+                available_calls.append(11)
+            if day >= 14 and vexi == 0:
+                available_calls.append(12)
             
             if len(available_calls) > 0 and not in_action:
                 zvv = True
@@ -780,12 +801,70 @@ async def main():
                                 console.print("[green]Выбор: [/]")
                                 console.print("[green]1. Скинуть проект[/]")
                                 console.print("[red]2. Передумать[/]")
-                                console.print("[white]3. Узнать подробнее[/]")
-                                otzz4 = Prompt.ask(
+                                otzz5 = Prompt.ask(
                                     "ВЫБИРАЙ:", 
-                                    choices=["1", "2", "3"], 
+                                    choices=["1", "2"], 
                                     default="1"
                                 )
+                                if otzz5 == "1":
+                                    time.sleep(1.2)
+                                    console.print("Вы: Скинул!")
+                                    time.sleep(1.7)
+                                    console.print(f"Gamecorp o ration: Отлично! Нам нужен примерно месяц.")
+                                    time.sleep(2)
+                                    console.print(f"[white]Спустя месяц...")
+                                    time.sleep(2)
+                                    console.print(f"Gamecorp o ration: Это снова Gamecorp o ration Мы рассмотрели вашу игру и защитили теперь заплатите 250 очков")
+                                    time.sleep(2)
+                                    console.print(f"Вы: Но вы же сказали 5000 очков")
+                                    time.sleep(2)
+                                    console.print(f"Gamecorp o ration: У нас настроение просто хорошое ПЛАТИ ПОКА СУММА НЕ УВЕЛИЧИЛАСЬ ТО 7500 ОЧКОВ!")
+                                    time.sleep(1.2)
+                                    console.print("[green]Выбор: [/]")
+                                    console.print("[green]1. Заплатить[/]")
+                                    console.print("[red]2. Не платить[/]")
+                                    otzz6 = Prompt.ask(
+                                        "ВЫБИРАЙ:", 
+                                        choices=["1", "2"], 
+                                        default="1"
+                                    )
+                                    if otzz6 == "1":
+                                        if ochko >= 250:
+                                            ochkoP = random.randint(200, 1200)
+                                            ochko += ochkoP
+                                            save_game()
+                                            time.sleep(1.2)
+                                            console.print("Вы: Заплатил!")
+                                            time.sleep(1.7)
+                                            console.print(f"Gamecorp o ration: Игра уже продаётся! Спасибо за сотрудничество!")
+                                            time.sleep(2)
+                                            console.print(f"[white]Спустя месяц вы заработали {ochkoP} очков![/]")
+                                        else:
+                                            time.sleep(1.2)
+                                            console.print("Вы: У меня нет стольки очков!")
+                                            time.sleep(1.7)
+                                            console.print(f"Gamecorp o ration: Не переживайте, у нас для вас скидка. Сегодня ровно {ochko} очков!")
+                                            time.sleep(1.2)
+                                            console.print("Вы: Покупаю!!!!!")
+                                            console.print(f"Gamecorp o ration: Игра уже продаётся! Спасибо за сотрудничество!")
+                                            time.sleep(2)
+                                            console.print(f"[white]Спустя месяц...[/]")
+                                            time.sleep(2)
+                                            console.print(f"Gamecorp o ration: Это снова Gamecorp o ration Мы рассмотрели вашу игру и защитили теперь заплатите {ochko * 4 + 30} очков")
+                                            time.sleep(2)
+                                            console.print(f"Вы: Но вы же сказали {ochko} очков")
+                                            time.sleep(2)
+                                            console.print(f"Gamecorp o ration: У нас настроение теперь плохое ПЛАТИ Я СКАЗАЛ ИНАЧЕ СУММА УВЕЛИЧИТСЯ ДО {ochko * 8 + 30} ОЧКОВ!")
+                                            time.sleep(2)
+                                            console.print(f"Вы: Во что я вляпался...")
+                                            ochko = 0
+                                            save_game()
+                                elif otzz5 == "2":
+                                    console.print(f"Вы: Я передумал")
+                                    time.sleep(0.4)
+                                    console.print(f"Gamecorp o ration: но вы же согласились!")
+                                    time.sleep(0.6)
+                                    console.print(f"Вы: А баба яга обосралась короч всё пока")
                                 
                         elif otzz3 == "2":
                             console.print(f"Вы: ДА ПОШЛИ ВЫ Я ЗА СПРАВЕДЛИВОСТЬ!")
@@ -1165,9 +1244,171 @@ async def main():
                             console.print("Díkè Níngjǐn: ...")
                             time.sleep(3.5)
                     elif ra == 10:
-                        # МАКСИМ ПИШИ КОД сюда
-                        # ниже не трогай
-                        cdis = 1
+                        """
+                        СТРАХУНЕЦ ОБОСРУНЕЦ
+                        П*ЗДЦ СМЕШНО 
+                        ХАХАХАХАХХАХАВХЫВАХАЗВЫХАЗЫВХАФЗХВАХВЫАХЫВХАХЫВХПХЫВХПХХЫВХАХЫВХАХЫВХХАХЫВХПХЫВХАХЫВХАХЫВХАХЫВХАХЫВХАХЫВХАХЫВХАХЫВХХАХЫВХАХЫВХАХВХЫХАХЫВХАХЫВАХЫВХАХЫХАХХ
+                        ХАХАХАХАХХАХАВХЫВАХАЗВЫХАЗЫВХАФЗХВАХВЫАХЫВХАХЫВХПХЫВХПХХЫВХАХЫВХАХЫВХХАХЫВХПХЫВХАХЫВХАХЫВХАХЫВХАХЫВХАХЫВХАХЫВХАХЫВХХАХЫВХАХЫВХАХВХЫХАХЫВХАХЫВАХЫВХАХЫХАХХ
+                        ХАХАХАХАХХАХАВХЫВАХАЗВЫХАЗЫВХАФЗХВАХВЫАХЫВХАХЫВХПХЫВХПХХЫВХАХЫВХАХЫВХХАХЫВХПХЫВХАХЫВХАХЫВХАХЫВХАХЫВХАХЫВХАХЫВХАХЫВХХАХЫВХАХЫВХАХВХЫХАХЫВХАХЫВАХЫВХАХЫХАХХ
+                        ХАХАХАХАХХАХАВХЫВАХАЗВЫХАЗЫВХАФЗХВАХВЫАХЫВХАХЫВХПХЫВХПХХЫВХАХЫВХАХЫВХХАХЫВХПХЫВХАХЫВХАХЫВХАХЫВХАХЫВХАХЫВХАХЫВХАХЫВХХАХЫВХАХЫВХАХВХЫХАХЫВХАХЫВАХЫВХАХЫХАХХ
+                        ХАХАХАХАХХАХАВХЫВАХАЗВЫХАЗЫВХАФЗХВАХВЫАХЫВХАХЫВХПХЫВХПХХЫВХАХЫВХАХЫВХХАХЫВХПХЫВХАХЫВХАХЫВХАХЫВХАХЫВХАХЫВХАХЫВХАХЫВХХАХЫВХАХЫВХАХВХЫХАХЫВХАХЫВАХЫВХАХЫХАХХ 
+                        $-vexikoff
+                        """
+
+                        os.system('cls' if os.name == 'nt' else 'clear')
+                        time.sleep(1.2)
+                        console.print(f"Страхунец обосрунец: Здраствуйте! Вам позвонили люди из страхунец обосрунец! Мы застрахуем вашу жизнь!.")
+                        time.sleep(2)
+                        console.print(f"Вы: Пасиба меня никто убивать не собирается")
+                        time.sleep(2)
+                        console.print(f"Страхунец обосрунец: А если кто то захочет? ну например что если вас мужики на улице зажмут? ну всё конец! а ведь вы можете это предотвратить заплатив нам 2000 очков")
+                        time.sleep(1.2)
+                        console.print(f"Вы: 2000 ОЧКОВ? не ну я лучше в больницу пойду") 
+                        # ХАХАХАХАХХАХАВХЫВАХАЗВЫХАЗЫВХАФЗХВАХВЫАХЫВХАХЫВХПХЫВХПХХЫВХАХЫВХАХЫВХХАХЫВХПХЫВХАХЫВХАХЫВХАХЫВХАХЫВХАХЫВХАХЫВХАХЫВХХАХЫВХАХЫВХАХВХЫХАХЫВХАХЫВАХЫВХАХЫХАХХ $-vexikoff
+                        # ХАХАХАХАХХАХАВХЫВАХАЗВЫХАЗЫВХАФЗХВАХВЫАХЫВХАХЫВХПХЫВХПХХЫВХАХЫВХАХЫВХХАХЫВХПХЫВХАХЫВХАХЫВХАХЫВХАХЫВХАХЫВХАХЫВХАХЫВХХАХЫВХАХЫВХАХВХЫХАХЫВХАХЫВАХЫВХАХЫХАХХ $-vexikoff
+                        # ХАХАХАХАХХАХАВХЫВАХАЗВЫХАЗЫВХАФЗХВАХВЫАХЫВХАХЫВХПХЫВХПХХЫВХАХЫВХАХЫВХХАХЫВХПХЫВХАХЫВХАХЫВХАХЫВХАХЫВХАХЫВХАХЫВХАХЫВХХАХЫВХАХЫВХАХВХЫХАХЫВХАХЫВАХЫВХАХЫХАХХ $-vexikoff
+                        time.sleep(2)
+                        # ХАХАХАХАХХАХАВХЫВАХАЗВЫХАЗЫВХАФЗХВАХВЫАХЫВХАХЫВХПХЫВХПХХЫВХАХЫВХАХЫВХХАХЫВХПХЫВХАХЫВХАХЫВХАХЫВХАХЫВХАХЫВХАХЫВХАХЫВХХАХЫВХАХЫВХАХВХЫХАХЫВХАХЫВАХЫВХАХЫХАХХ хахвыхахывфх $-vexikoff
+                        console.print(f"Страхунец обосрунец: Да не вы не поняли, оплатили 1 раз, и если что то произошло то платите ещё раз! разве не выгодно?") # МАКС НЕ УДАЛЯЙ КОМЕНТ ХАХАХАХАХХАХАВХЫВАХАЗВЫХАЗЫВХАФЗХВАХВЫАХЫВХАХЫВХПХЫВХПХХЫВХАХЫВХАХЫВХХАХЫВХПХЫВХАХЫВХАХЫВХАХЫВХАХЫВХАХЫВХАХЫВХАХЫВХХАХЫВХАХЫВХАХВХЫХАХЫВХАХЫВАХЫВХАХЫХАХХ $-vexikoff
+                        time.sleep(1.2)
+                        console.print(f"Вы: нуууууу...")
+                        console.print("[green]Выбор: [/]") 
+                        console.print("[green]1. согласится и оплатить[/]")
+                        console.print("[red]2. Не согласится и не платить[/]")
+                        otzz13 = Prompt.ask(
+                            "ВЫБИРАЙ:",
+                            choices=["1", "2"],
+                            default="1"
+                        )
+                        if otzz13 == "1":
+                            if ochko >= 2000:
+                                ochko -= 2000 # вот так вот, вот так вау, вот так вот, вот так вау. $-vexikoff
+                                # ну кароче я страхунец обосрунец $-vexikoff
+                                time.sleep(1.2)
+                                console.print(f"Вы: ладно я согласен") # а максим лох попробуй удалить этот комент блять я тебя выебу $-vexikoff
+                                time.sleep(2)
+                                console.print(f"Страхунец обосрунец: Отлично! держите это")
+                                console.print("[red]ВЫ ПОЛУЧИЛИ КИНЖАЛ[/]")
+                                time.sleep(2)
+                                console.print(f"Вы: кинжал? это точно страховка?")
+                                time.sleep(2)
+                                console.print(f"Страхунец обосрунец: Мы не как все страховки, наша цель это защитить вас по максимуму") # МАКСИМуму МАКСИМуму МАКСИМуму МАКСИМуму МАКСИМуму $-vexikoff
+                                knj = 1
+                                cdis = 1
+                            else: 
+                                # вот так вот, вот так вау, вот так вот, вот так вау. $-vexikoff
+                                # ну кароче я страхунец обосрунец $-vexikoff
+                                time.sleep(1.2)
+                                console.print(f"Вы: ладно я согласен но только по скидке потому что у меня токо {ochko} очков") # а максим лох попробуй удалить этот комент блять я тебя выебу $-vexikoff
+                                time.sleep(1)
+                                console.print(f"Страхунец обосрунец: НЕТ!")
+                                time.sleep(1)
+                                console.print(f"Вы: почему?")
+                                time.sleep(0.7)
+                                console.print(f"Страхунец обосрунец: мы не как gamecorp o ration у нас много заказов а цена ФИКСИРОВАНА!") # Мы не как все страховки, наша цель это защитить вас по максимуму и стянуть деньги по максимуму
+                                time.sleep(2)
+                                console.print(f"Вы: стоп а откуда вы знаете про gamecorp o ration?")
+                                time.sleep(2)
+                                console.print(f"*Трубка сброшена*")
+                                
+                        elif otzz13 == "2":
+                            time.sleep(1.2)
+                            console.print(f"Вы: я откажусь")
+                            time.sleep(2)
+                            console.print(f"Страхунец обосрунец: НЕТ, вы не имеете право отказатся, иначе к вам приедут 10 спортаков")
+                            time.sleep(2)
+                            console.print(f"Вы: нуууууу...")
+                            console.print("[green]Выбор: [/]") 
+                            console.print("[green]1. согласится и оплатить[/]")
+                            console.print("[red]2. Не согласится и не платить[/]")
+                            otzz15 = Prompt.ask(
+                                "ВЫБИРАЙ:",
+                                choices=["1", "2"],
+                                default="1"
+                            )
+                            if otzz15 == "1":
+                                if ochko >= 2000:
+                                    ochko -= 2000 # вот так вот, вот так вау, вот так вот, вот так вау. $-vexikoff
+                                    # ну кароче я страхунец обосрунец $-vexikoff
+                                    time.sleep(1.2)
+                                    console.print(f"Вы: ладно я согласен") # а максим лох попробуй удалить этот комент блять я тебя выебу $-vexikoff
+                                    time.sleep(2)
+                                    console.print(f"Страхунец обосрунец: Отлично! держите это")
+                                    console.print("[red]ВЫ ПОЛУЧИЛИ КИНЖАЛ[/]")
+                                    time.sleep(2)
+                                    console.print(f"Вы: кинжал? это точно страховка?")
+                                    time.sleep(2)
+                                    console.print(f"Страхунец обосрунец: Мы не как все страховки, наша цель это защитить вас по максимуму") # МАКСИМуму МАКСИМуму МАКСИМуму МАКСИМуму МАКСИМуму $-vexikoff
+                                    knj = 1
+                                    cdis = 1
+                                else: 
+                                    # вот так вот, вот так вау, вот так вот, вот так вау. $-vexikoff
+                                    # ну кароче я страхунец обосрунец $-vexikoff
+                                    time.sleep(1.2)
+                                    console.print(f"Вы: ладно я согласен но только по скидке потому что у меня токо {ochko} очков") # а максим лох попробуй удалить этот комент блять я тебя выебу $-vexikoff
+                                    time.sleep(1)
+                                    console.print(f"Страхунец обосрунец: НЕТ!")
+                                    time.sleep(1)
+                                    console.print(f"Вы: почему?")
+                                    time.sleep(0.7)
+                                    console.print(f"Страхунец обосрунец: мы не как gamecorp o ration у нас много заказов а цена ФИКСИРОВАНА!") # Мы не как все страховки, наша цель это защитить вас по максимуму и стянуть деньги по максимуму
+                                    time.sleep(2)
+                                    console.print(f"Вы: стоп а откуда вы знаете про gamecorp o ration?")
+                                    time.sleep(2)
+                                    console.print(f"*Трубка сброшена*")
+                            elif otzz15 == "2":
+                                time.sleep(1.2)
+                                console.print(f"Вы: Я СКАЗАЛ Я ОТКАЗЫВАЮСЬ ТОЧКА. НИКТО КО МНЕ НЕ ПРИЕДЕТ") # а максим лох попробуй удалить этот комент блять я тебя выебу $-vexikoff
+                                time.sleep(2)
+                                console.print(f"Страхунец обосрунец: а вот это ты ошибаешся.")
+                                time.sleep(2)
+                                console.print(f"*Трубка сброшена*")
+                                sport = 1
+                            time.sleep(2)
+                            save_game()
+
+                    elif ra == 11:
+                        os.system('cls' if os.name == 'nt' else 'clear')
+                        time.sleep(1.2)
+                        console.print(f"KukoPidastr: Здраствуйте! Мы компания KukoPidastr! Мы продаем лучшие пипидастры в жизни. Спонсор Díkè Níngjǐn!")
+                        time.sleep(2)
+                        console.print(f"Вы: Ну и что?")
+                        time.sleep(2)
+                        console.print(f"KukoPidastr: Ну типа купите пипидастр, эсли не жалко")
+                        time.sleep(1.2)
+                        console.print("[green]Выбор: [/]")
+                        console.print("[green]1. Купить[/]")
+                        console.print("[red]2. Не покупать[/]")
+                        otzz14 = Prompt.ask(
+                            "ВЫБИРАЙ:",
+                            choices=["1", "2"],
+                            default="1"
+                        )
+                        if otzz14 == "1":
+                            cdiss = 1
+                            console.print(f"Вы: ПОКУПАЮ!!!!!!!!")
+                            time.sleep(2)
+                            console.print(f"KukoPidastr: Спасибо он вам приедет я хз когда")
+                            time.sleep(2.2)
+                        if otzz14 == "2":
+                            console.print(f"Вы: не буду")
+                            time.sleep(2)
+                            console.print(f"KukoPidastr: ну и иди нахуй жлоб ебаный")
+                            time.sleep(2.2)
+                        save_game()
+                    elif ra == 12:
+                        time.sleep(1.2)
+                        console.print(f"vexikoff: дарова бро ты игру проходить собираешься нет? уже ебаный {day}-ий день!")
+                        time.sleep(2)
+                        console.print(f"Вы: Не хочу иди нахуй")
+                        time.sleep(2)
+                        console.print(f"vexikoff: я для кого игру делал? для таких долгодумов как ты челе?")
+                        time.sleep(2)
+                        console.print(f"Вы: Да")
+                        time.sleep(2)
+                        console.print(f"vexikoff: НУ ПРОХОДИ ТОГДА БЫСТРЕЕ")
+                        time.sleep(2)
+                        vexi = 1
                         save_game()
                     else:
                         console.print("Вы упустили важное")
@@ -1178,12 +1419,13 @@ async def main():
         await asyncio.sleep(0.1)
 
 async def tolyapath2():
-    global path_tolya, tolya_dialog, day, daytolya, data_base, zvv, domtolya, ochko, imya, gamecorpscam, koncovka_active, in_action
+    global path_tolya, tolya_dialog, day, daytolya, data_base, zvv, domtolya, ochko, imya, gamecorpscam, koncovka_active, in_action, tolya22
     while True:
         if path_tolya == 2 and tolya_dialog == 1 and zvv == False and in_action == False:
             zvv = True
             in_action = True
-            if day >= daytolya + 2 and domtolya != 1:
+            if day >= daytolya + 2 and domtolya != 1 and tolya22 == 0:
+                time.sleep(0.1)
                 os.system('cls' if os.name == 'nt' else 'clear')
                 time.sleep(1.2)
                 console.print('Вы просыпаетесь от стука в дверь, там Толя')
@@ -1208,6 +1450,7 @@ async def tolyapath2():
                     time.sleep(2.5)
                     domtolya = 1
                     save_game()
+                    
                 elif otzz == "2":
                     console.print('Вы: Я не поеду, я останусь')
                     time.sleep(2.5)
@@ -1217,7 +1460,10 @@ async def tolyapath2():
                     time.sleep(2.5)
                     domtolya = 2
                     save_game()
-            elif day >= daytolya + 4 and domtolya == 1:
+                tolya22 = 1
+            
+            elif day >= daytolya + 4 and domtolya == 1 and tolya22 == 1:
+                os.system('cls' if os.name == 'nt' else 'clear')
                 console.print('Вы просыпаетесь от голоса, Толя зовет вас скамить')
                 time.sleep(2.5)
                 if data_base == 1:
@@ -1254,8 +1500,9 @@ async def tolyapath2():
                     time.sleep(2.5)
                     console.print('Толя: Окей, завтра обсудим.')
                     time.sleep(2.5)
+                tolya22 = 2
 
-            elif day >= daytolya + 4 and domtolya == 2:
+            elif day >= daytolya + 4 and domtolya == 2 and tolya22 == 2:
                 console.print('Вы просыпаетесь от звонка на ДаркНет номер.')
                 time.sleep(2.5)
                 if data_base == 1:
@@ -1313,8 +1560,10 @@ async def tolyapath2():
                         save_game()
                         console.print("Толя: Ладно, твой выбор. Завтра свяжемся.")
                         time.sleep(2.5)
+                tolya22 = 3
 
-            elif day >= daytolya + 6 and domtolya == 1 and gamecorpscam == 0:
+            elif day >= daytolya + 6 and domtolya == 1 and gamecorpscam == 0 and tolya22 == 3:
+                tolya22 = 4
                 if domtolya == 1:
                     console.print('Вы просыпаетесь от голоса ночью.')
                 elif domtolya == 2 or domtolya == 3:
@@ -1614,7 +1863,7 @@ if __name__ == '__main__':
             console.print("[red]0 - Позвонить Толе (нужен MearePhone)[/]")
             
         console.print("[green]Q - Магазин (гвозди, MearePhone)[/]")
-            
+        console.print("[green]E - Заглянуть в рюкзак[/]")            
         console.print("Выберите что вам сделать: ")
         ent = 0
         char = None
@@ -1625,6 +1874,8 @@ if __name__ == '__main__':
                 ent = int(char)
             elif char.lower() == 'q':
                 ent = 11
+            elif char.lower() == 'e':
+                ent = 13
         
         if ent == 0 and char != '0':
             time.sleep(0.05)
@@ -2065,17 +2316,17 @@ if __name__ == '__main__':
                 console.print("[red]2 - MearePhone[/]")
             if dike >= 1:
                 if ochko >= 3000:
-                    console.print("[green]3 -  (3000 очков) - Juing Orus 3000[/]")
+                    console.print("[green]3 - Juing Orus 3000 (3000 очков)[/]")
                 else:
-                    console.print("[red]3 -  (3000 очков) - Juing Orus 3000 (нет очков)[/]")
+                    console.print("[red]3 - Juing Orus 3000 (нет 3000 очков)[/]")
             else:
-                console.print("[red]3 -  (3000 очков) - Juing Orus 3000[/]")
+                console.print("[red]3 - Juing Orus 3000 (3000 очков)[/]")
             console.print("[red]4 - Выйти из магазина[/]")
             console.print("")
             otzz_mag = Prompt.ask(
                 "Выбор:", 
                 choices=["1", "2", "3", "4"], 
-                default="3"
+                default="4"
             )
             if otzz_mag == "1":
                 if ochko >= 40:
@@ -2141,7 +2392,101 @@ if __name__ == '__main__':
                 console.print("[red]Недостаточно очков для покупки гвоздя![/]")
             time.sleep(1)
             in_action = False
+        elif int(ent) == 13:
+            os.system('cls' if os.name == 'nt' else 'clear')
+            if knj == 1:
+                console.print("[green]кинжал[/]")
+            if juing == 1:
+                console.print("[green]очень крутой туалет Juing Orus 3000[/]")
+            if knj == 0 and juing == 0:
+                console.print("[red]у вас ничего нет[/]")
+
+            console.print("[green]1 - Осмотреть предмет[/]")
+            console.print("[red]2 - Закрыть Рьюкзак[/]")
+            otzz_inv = Prompt.ask(
+                "Выбор:", 
+                choices=["1", "2"], 
+                default="2"
+            )
+
+            if otzz_inv == "1":
+                console.print("какой предмет осмотреть?")
+                if knj == 1:
+                    console.print("[green]1 - кинжал[/]")
+                if juing == 1:
+                    console.print("[green]2 - очень крутой туалет Juing Orus 3000[/]")
+                if knj == 0 and juing == 0:
+                    console.print("вам нечего осматривать")
+                console.print("[green]3 - Закрыть Рьюкзак[/]")
+                if int(ent) == 1 and knj == 1:
+                    console.print("вы начинайте осмотратривать кинжал...")
+                    time.sleep(2)
+                    console.print("вы видите на нём неизвестный логотип...")
+                    time.sleep(2)
+                    console.print("он выглядит так, как будто им кто то пользовался...")
+                    time.sleep(2)
+                if int(ent) == 2 and juing == 1:
+                    console.print("вы начинайте осмотратривать унитаз...")
+                    time.sleep(2)
+                    console.print("выглядит как обычный унитаз...")
+                    time.sleep(2)
+                    console.print("вы видите на нём логотип Dike...")
+                    time.sleep(2)
+                    console.print("он выглядит так, как будто на него конч*ли...")
+                    time.sleep(2)
+                    console.print("вы нажимаете на кнопку, и он говорит \"Привет! Чем могу помочь?\"")
+                    time.sleep(2)
+                elif int(ent) == 3:
+                    console.print("[white]Вы закрыли рюкзак.[/]")
+                    time.sleep(1)
+                time.sleep(5)
+                
+                in_action = False    
+
+            elif otzz_inv == "2":
+                console.print("[white]Вы закрыли рюкзак.[/]")
+                time.sleep(1)
+                
+            in_action = False    
+            # я сделал логику нажатия E максим. ну чтоб сюда зайти  на 1865 строке это я сделал. $-vexikoff
+            
+            
         else:
             console.print("[red]Неправильное написал[/]")
             time.sleep(0.1)
             in_action = False
+
+        
+# максим лох попробуй удалить этот комент блять я тебя выебу $-vexikoff
+
+# !!!!!!!!!! СРОЧНО СООБЩЕНИЕ ОТ РАЗРАБА !!!!!!!!!! $-vexikoff
+
+"""
+Кто читает НУ МАКСИМ СЬЕБИСЬ ОТСЮДА ЗЩАЕБАЛ БЯЛЬТЬ
+ну тот нахуй читает ывделайяте аврпФрваавфсрДА СУКА МАКСИМ ЕБАНЫЙ Я ТЕБЯ ЩАС ВЫЕБУ ЗАЕБАЛ БЛЯТЬ
+ну кароче тот кто это читает делайте форки потому что кто будет читать и нахуй эсли не знает пайтона улучшайте игру делайте иссуе форки ну то самое
+Ни один максим в работе не пострадал.
+
+Максим ради тебя я могу сюда добавить резку мыла но не буду
+
+Фиксы и выявление ошибок:
+vexikoff
+qwen
+
+3 дня разработки
+1 минута идей
+ленивый вирус, не выпущен.
+Это Youhe Bain 1: Others' Circumstances
+СПОЙЛЕР (_ - Неизвестно):
+Youhe Bain 2: ___W
+
+С уважением к всем кто читает,
+vexikoff.
+
+Допущено ошибок максимом (примерно): 4
+Допущено ошибок мной (примерно): 10
+
+НУ У МАКСИМА МЕНЬШЕ ПОТОМУ ЧТО ОН НИХУЯ НЕ ДЕЛАЛ ПОЧТИ 
+
+$-vexikoff
+"""
