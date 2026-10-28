@@ -93,13 +93,15 @@ def save_game():
         "vexi": vexi,
         "knj": knj,
         "sport": sport,
-        "tolya22": tolya22
+        "tolya22": tolya22,
+        "chkj": chkj,
+        "mich": mich
     }
     with open("save.json", "w") as f:
         json.dump(save_data, f)
 
 def load_game():
-    global ochko, pomit, sport, pomitp, tolya22, daytolya, musor, cdis, vexi, cdiss, gamecorpscam, dro, igr, drc, dss, rib, juing, rrib, opencr, gamecorp, dike, day, posilka, data_base, chh, dayav, ddv, mmv, dayav2, mmv2, imya, gvozd, police, tolea_sdan, psiholog, paranoya_day, paranoya_shown, koncovka_active, mearephone, tolya_dialog, path_tolya, path_police, knj
+    global ochko, pomit, chkj, mich, sport, pomitp, tolya22, daytolya, musor, cdis, vexi, cdiss, gamecorpscam, dro, igr, drc, dss, rib, juing, rrib, opencr, gamecorp, dike, day, posilka, data_base, chh, dayav, ddv, mmv, dayav2, mmv2, imya, gvozd, police, tolea_sdan, psiholog, paranoya_day, paranoya_shown, koncovka_active, mearephone, tolya_dialog, path_tolya, path_police, knj
     try:
         with open("save.json", "r") as f:
             save_data = json.load(f)
@@ -146,6 +148,8 @@ def load_game():
             knj = save_data.get("knj", 0)
             sport = save_data.get("sport", 0)
             tolya22 = save_data.get("tolya22", 0)
+            chkj = save_data.get("chkj", "3")
+            mich = save_data.get("mich", 0)
             return True
     except FileNotFoundError:
         return False
@@ -192,6 +196,7 @@ ochko = 0
 imya = 0
 gvozd = 0
 in_action = False
+chkj = "3"
 
 igr = 1
 drc = 0
@@ -233,6 +238,7 @@ knj = 0
 sport = 0
 tolya22 = 0
 ent2 = 0
+mich = 0
 cooldowns = {
     "pomit": 0,
     "pomitp": 0,
@@ -323,7 +329,7 @@ def koncovka_neutral():
     pygame.mixer.music.load('3.wav')
     pygame.mixer.music.play(-1)
     console.print("")
-    console.print("[white]КОНЦОВКА 3 ИЗ 5: Нейтрал[/]")
+    console.print("[white]КОНЦОВКА 3 ИЗ 7: Нейтрал[/]")
     console.print("")
     time.sleep(3)
     console.print("[white]Вы выбрали сторону закона.[/]")
@@ -381,6 +387,118 @@ def koncovka_predatel(name):
     time.sleep(2.5)
     console.print("Он делает шаг вперёд.")
     time.sleep(2.5)
+
+    if knj == 0:
+        pygame.init()
+        sfx = pygame.mixer.Sound('pirok.wav') # звук пырка ножом
+        sfxc = pygame.mixer.Channel(1) # звук пырка ножом
+        sfxc.set_volume(1.0) # звук пырка ножом
+        sfxc.play(sfx) # звук пырка ножом
+        console.print("Вы пытаетесь крикнуть.")
+        time.sleep(2.5)
+        console.print("Звук не идёт из горла.")
+        time.sleep(3)
+        console.print("[red]Вспышка боли.[/]")
+        time.sleep(2)
+        console.print("[red]Холод.[/]")
+        time.sleep(2)
+        console.print("[red]Темнота.[/]")
+        time.sleep(4)
+        os.system('cls' if os.name == 'nt' else 'clear')
+        time.sleep(2)
+        pygame.mixer.music.load('1.wav')
+        pygame.mixer.music.play(-1)
+        console.print("")
+        console.print("[white]КОНЦОВКА 1 ИЗ 7: ПРЕДАТЕЛЬ[/]")
+        console.print("")
+        time.sleep(3)
+        console.print("[white]Вы выбрали сторону закона.[/]")
+        time.sleep(2.5)
+        console.print("[white]Но в этом мире закон не защищает.[/]")
+        time.sleep(2.5)
+        console.print("[white]Он помнил ваше лицо.[/]")
+        time.sleep(2.5)
+        console.print("[white]Он помнил ваш адрес.[/]")
+        time.sleep(3)
+        console.print("")
+        console.print("[yellow]Статистика:[/]")
+        console.print(f"[yellow]Прожито дней: {day}[/]")
+        console.print(f"[yellow]Заработано очков: {ochko}[/]")
+        console.print(f'[yellow]Куплено "очень крутых и полезных" унитазов: {juing}[/]')
+        time.sleep(5)
+        console.print("")
+        console.print("[white]Нажмите Enter чтобы выйти...[/]")
+        input()
+        titry()
+        os._exit(0)
+    elif knj == 1:
+        time.sleep(2.5)
+        console.print("Вы вспоминайте про кинжал...")
+        time.sleep(2.5)
+        console.print("Вы достаете кинжал...")
+        pygame.init()
+        sfx = pygame.mixer.Sound('pirokkin.wav') # звук пырка кинжалом
+        sfxc = pygame.mixer.Channel(1) # звук пырка кинжалом
+        sfxc.set_volume(1.0) # звук пырка кинжалом
+        sfxc.play(sfx) # звук пырка кинжалом
+        time.sleep(2)
+        console.print("[red]Холод.[/]")
+        time.sleep(2)
+        console.print("[red]Темнота.[/]")
+        time.sleep(3)
+        console.print("[red]Не зря вам дали этот кинжал.[/]")
+        time.sleep(3)
+        pygame.mixer.music.load('8.wav')
+        pygame.mixer.music.play(-1)
+        console.print("")
+        console.print("[white]КОНЦОВКА 6 ИЗ 7: Самозащитник[/]")
+        console.print("")
+        console.print("[yellow]Статистика:[/]")
+        console.print(f"[yellow]Прожито дней: {day}[/]")
+        console.print(f"[yellow]Заработано очков: {ochko}[/]")
+        console.print(f'[yellow]Куплено "очень крутых и полезных" унитазов: {juing}[/]')
+        time.sleep(5)
+        console.print("")
+        console.print("[white]Нажмите Enter чтобы выйти...[/]")
+        input()
+        titry()
+        os._exit(0)
+    
+def koncovka_predatel(name):
+    global koncovka_active, tolea_sdan, day, ochko, zvv
+    zvv = 1
+    koncovka_active = 1
+    save_game()
+    os.system('cls' if os.name == 'nt' else 'clear')
+    time.sleep(2)
+    console.print(f"[red]День {day}. 2:47 ночи.[/]")
+    time.sleep(3)
+    console.print("Вы просыпаетесь от странного звука.")
+    time.sleep(2.5)
+    console.print("Кто-то скребётся в дверь. Тихо. Потом громче.")
+    time.sleep(2.5)
+    console.print("[yellow]Скрип... Скрип... Скрип...[/]")
+    time.sleep(2)
+    console.print("Вы пытаетесь встать. Ноги не слушаются.")
+    time.sleep(2.5)
+    console.print("[yellow]Звук металла по замку.[/]")
+    time.sleep(2.5)
+    console.print("Холодный пот течёт по спине.")
+    time.sleep(2.5)
+    console.print("[yellow]Щёлк.[/]")
+    time.sleep(3)
+    console.print("Дверь медленно открывается.")
+    time.sleep(3)
+    console.print("В проёме силуэт. Тёмный. Неподвижный.")
+    time.sleep(3)
+    console.print("Вы узнаёте это лицо.")
+    time.sleep(3)
+    console.print(f"[red]{name}[/]")
+    time.sleep(3)
+    console.print("В его руке блеск лезвия.")
+    time.sleep(2.5)
+    console.print("Он делает шаг вперёд.")
+    time.sleep(2.5)
     console.print("Вы пытаетесь крикнуть.")
     time.sleep(2.5)
     console.print("Звук не идёт из горла.")
@@ -397,7 +515,7 @@ def koncovka_predatel(name):
     pygame.mixer.music.load('1.wav')
     pygame.mixer.music.play(-1)
     console.print("")
-    console.print("[white]КОНЦОВКА 1 ИЗ 5: ПРЕДАТЕЛЬ[/]")
+    console.print("[white]КОНЦОВКА 1 ИЗ 7: ПРЕДАТЕЛЬ[/]")
     console.print("")
     time.sleep(3)
     console.print("[white]Вы выбрали сторону закона.[/]")
@@ -442,7 +560,7 @@ def koncovka_police():
     pygame.mixer.music.load('5.wav')
     pygame.mixer.music.play(-1)
     console.print("")
-    console.print("[white]КОНЦОВКА 5 ИЗ 5: СКАМ ДОМА[/]")
+    console.print("[white]КОНЦОВКА 5 ИЗ 7: СКАМ ДОМА[/]")
     console.print("")
     time.sleep(3)
     console.print("")
@@ -468,7 +586,7 @@ def koncovka_data():
     pygame.mixer.music.load('4.wav')
     pygame.mixer.music.play(-1)
     console.print("")
-    console.print("[white]КОНЦОВКА 2 ИЗ 5: СКАМ ДАТА БАЗОЙ[/]")
+    console.print("[white]КОНЦОВКА 2 ИЗ 7: СКАМ ДАТА БАЗОЙ[/]")
     console.print("")
     time.sleep(3)
     console.print("")
@@ -494,7 +612,34 @@ def koncovka_notdata():
     pygame.mixer.music.load('6.wav')
     pygame.mixer.music.play(-1)
     console.print("")
-    console.print("[white]КОНЦОВКА 4 ИЗ 5: СКАМ УГРОЗОЙ[/]")
+    console.print("[white]КОНЦОВКА 4 ИЗ 7: СКАМ УГРОЗОЙ[/]")
+    console.print("")
+    time.sleep(3)
+    console.print("")
+    console.print("[yellow]Статистика:[/]")
+    console.print(f"[yellow]Прожито дней: {day}[/]")
+    console.print(f"[yellow]Заработано очков: {ochko}[/]")
+    console.print(f'[yellow]Куплено "очень крутых и полезных" унитазов: {juing}[/]')
+    time.sleep(5)
+    console.print("")
+    console.print("[white]Нажмите Enter чтобы выйти...[/]")
+    input()
+    titry()
+    os._exit(0)
+
+def koncovka_dolgo():
+    global koncovka_active, tolea_sdan, day, ochko, zvv
+    zvv = 1
+    koncovka_active = 7
+    save_game()
+    os.system('cls' if os.name == 'nt' else 'clear')
+    time.sleep(2)
+    pygame.mixer.init()
+    pygame.mixer.music.load('7.wav')
+    pygame.mixer.music.play(-1)
+    console.print("[white]Секретная концовка открыта.[/]")
+    console.print("")
+    console.print("[white]КОНЦОВКА 7 ИЗ 7: Ждун[/]")
     console.print("")
     time.sleep(3)
     console.print("")
@@ -590,13 +735,15 @@ async def main():
                 available_calls.append(11)
             if day >= 14 and vexi == 0:
                 available_calls.append(12)
+            if day >= 6 and mich == 0:
+                available_calls.append(13)
             
             if len(available_calls) > 0 and not in_action:
                 zvv = True
                 zvonok = 1
                 answer_call = messagebox.askyesno("Звонок", "Вам поступил звонок. Принять?")
                 zvonok = 0
-                cooldowns["call"] = current_time + random.uniform(15.0, 40.0)
+                cooldowns["call"] = current_time + random.uniform(15.0, 120.0)
                 
                 ra = random.choice(available_calls)
                 
@@ -1389,6 +1536,10 @@ async def main():
                             cdiss = 1
                             console.print(f"Вы: ПОКУПАЮ!!!!!!!!")
                             time.sleep(2)
+                            if ochko >= 250:
+                                ochko -= 250
+                            else:
+                                ochko = 0
                             console.print(f"KukoPidastr: Спасибо он вам приедет я хз когда")
                             time.sleep(2.2)
                         if otzz14 == "2":
@@ -1409,7 +1560,15 @@ async def main():
                         time.sleep(2)
                         console.print(f"vexikoff: НУ ПРОХОДИ ТОГДА БЫСТРЕЕ")
                         time.sleep(2)
+                        console.print(f"Maxim304: привет я максим люблю грызть подгузники")
+                        time.sleep(2)
+                        console.print(f"Maxim304: и я гей")
+                        time.sleep(2)
                         vexi = 1
+                        save_game()
+                    elif ra == 13:
+                        # СЮДА МАКСИМ
+                        mich = 1 # ЧТОБ НЕ ЗВОНИЛ ПОВТОРНО
                         save_game()
                     else:
                         console.print("Вы упустили важное")
@@ -1792,6 +1951,9 @@ if __name__ == '__main__':
             break
         elif koncovka_active == 5:
             koncovka_notdata()
+            break
+        elif day >= 30:
+            koncovka_dol()
             break
 
         if zvv:
@@ -2407,31 +2569,35 @@ if __name__ == '__main__':
             otzz_inv = Prompt.ask(
                 "Выбор:", 
                 choices=["1", "2"], 
-                default="2"
+                default="1"
             )
 
             if otzz_inv == "1":
                 console.print("какой предмет осмотреть?")
                 if knj == 1:
+                    chkj = "1"
                     console.print("[green]1 - кинжал[/]")
                 if juing == 1:
+                    if knj == 0:
+                        chkj = "2"
                     console.print("[green]2 - очень крутой туалет Juing Orus 3000[/]")
                 if knj == 0 and juing == 0:
+                    chkj = "3"
                     console.print("вам нечего осматривать")
                 console.print("[green]3 - Закрыть Рьюкзак[/]")
                 ent2 = Prompt.ask(
                     "Выбор:", 
                     choices=["1", "2", "3"], 
-                    default="3"
+                    default=chkj
                 )
-                if ent2 == 1 and knj == 1:
+                if ent2 == "1" and knj == 1:
                     console.print("вы начинайте осмотратривать кинжал...")
                     time.sleep(2)
                     console.print("вы видите на нём неизвестный логотип...")
                     time.sleep(2)
                     console.print("он выглядит так, как будто им кто то пользовался...")
                     time.sleep(2)
-                if ent2 == 2 and juing == 1:
+                if ent2 == "2" and juing == 1:
                     console.print("вы начинайте осмотратривать унитаз...")
                     time.sleep(2)
                     console.print("выглядит как обычный унитаз...")
@@ -2442,7 +2608,7 @@ if __name__ == '__main__':
                     time.sleep(2)
                     console.print("вы нажимаете на кнопку, и он говорит \"Привет! Чем могу помочь?\"")
                     time.sleep(2)
-                elif ent2 == 3:
+                elif ent2 == "3":
                     console.print("[white]Вы закрыли рюкзак.[/]")
                     time.sleep(1)
                 
@@ -2454,7 +2620,6 @@ if __name__ == '__main__':
                 
             in_action = False    
             # я сделал логику нажатия E максим. ну чтоб сюда зайти  на 1865 строке это я сделал. $-vexikoff
-            
             
         else:
             console.print("[red]Неправильное написал[/]")
