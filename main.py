@@ -214,6 +214,7 @@ juing = 0
 daytolya = 0
 domtolya = 0
 gamecorpscam = 0
+cdis = 0
 cooldowns = {
     "pomit": 0,
     "pomitp": 0,
@@ -491,7 +492,7 @@ def koncovka_notdata():
     os._exit(0)
 
 async def main():
-    global pomit, pomitp, dike, musor, dro, igr, dss, drc, ochko, zvonok, zvv, rib, rrib, opencr, gamecorp, day, posilka, data_base, chh, dayav, dayav2, mmv, mmv2, imya, ddv, gvozd, in_action, tolea_sdan, psiholog, paranoya_day, paranoya_shown, koncovka_active, mearephone, tolya_dialog, path_tolya, path_police, police
+    global pomit, pomitp, dike, musor, dro, cdis, igr, dss, drc, ochko, zvonok, zvv, rib, rrib, opencr, gamecorp, day, posilka, data_base, chh, dayav, dayav2, mmv, mmv2, imya, ddv, gvozd, in_action, tolea_sdan, psiholog, paranoya_day, paranoya_shown, koncovka_active, mearephone, tolya_dialog, path_tolya, path_police, police
     
     global cooldowns
     cooldowns["call"] = time.time() + random.uniform(15.0, 40.0)
@@ -515,7 +516,7 @@ async def main():
     if day > 4 and dayav2 == 0 and ddv == 1 and mmv2 >= 1:
         cooldowns["dayav2"] = current_time + random.uniform(10.0, 50.0)
     
-    cooldowns["call"] = current_time + random.uniform(15.0, 40.0)
+    cooldowns["call"] = current_time + random.uniform(15.0, 120.0)
     
     while True:
         current_time = time.time()
@@ -565,8 +566,10 @@ async def main():
                 available_calls.append(8)
             if dike == 0:
                 available_calls.append(9)
+            if day >= 4 and cdis == 0:
+                available_calls.append(10)
             
-            if len(available_calls) > 0:
+            if len(available_calls) > 0 and not in_action:
                 zvv = True
                 zvonok = 1
                 answer_call = messagebox.askyesno("Звонок", "Вам поступил звонок. Принять?")
@@ -1161,6 +1164,11 @@ async def main():
                             time.sleep(2.5)
                             console.print("Díkè Níngjǐn: ...")
                             time.sleep(3.5)
+                    elif ra == 10:
+                        # МАКСИМ ПИШИ КОД сюда
+                        # ниже не трогай
+                        cdis = 1
+                        save_game()
                     else:
                         console.print("Вы упустили важное")
                     
@@ -1170,10 +1178,11 @@ async def main():
         await asyncio.sleep(0.1)
 
 async def tolyapath2():
-    global path_tolya, tolya_dialog, day, daytolya, data_base, zvv, domtolya, ochko, imya, gamecorpscam, koncovka_active
+    global path_tolya, tolya_dialog, day, daytolya, data_base, zvv, domtolya, ochko, imya, gamecorpscam, koncovka_active, in_action
     while True:
-        if path_tolya == 2 and tolya_dialog == 1 and zvv == False:
+        if path_tolya == 2 and tolya_dialog == 1 and zvv == False and in_action == False:
             zvv = True
+            in_action = True
             if day >= daytolya + 2 and domtolya != 1:
                 os.system('cls' if os.name == 'nt' else 'clear')
                 time.sleep(1.2)
@@ -1508,8 +1517,8 @@ async def tolyapath2():
                     console.print(
                         f"Вы жили спокойно, хорошо. Через 2 дня к вам приехала полиция, вас задержали на 5 лет. Вы увидели в новостях что Толя уехал в Финляндию, на приезде его задержали и он сел на 7 лет.")
                     koncovka_police()
-
             zvv = False
+            in_action = False
         await asyncio.sleep(0.1)
 
 if __name__ == '__main__':
@@ -1620,7 +1629,9 @@ if __name__ == '__main__':
         if ent == 0 and char != '0':
             time.sleep(0.05)
             continue
-                        
+
+        in_action = True
+
         if int(ent) == 1:
             if pomit == 1:
                 os.system('cls' if os.name == 'nt' else 'clear')
@@ -1746,7 +1757,7 @@ if __name__ == '__main__':
                     time.sleep(0.01)
                 
                 os.system('cls' if os.name == 'nt' else 'clear')
-                console.print(f"[green]Рыбалка окончена! Заработано очков: {ochko}[/]")
+                console.print(f"[green]Рыбалка окончена! Всего очков: {ochko}[/]")
                 rib = 0
                 cooldowns["rib"] = time.time() + random.uniform(60.0, 200.0)
                 save_game()
@@ -1759,7 +1770,7 @@ if __name__ == '__main__':
             if (dayav == 1 or dayav2 == 1) and dss == 1:
                 os.system('cls' if os.name == 'nt' else 'clear')
                 for i in track(range(100), description="Спим...", style="green"):
-                    time.sleep(0.35)
+                    time.sleep(0.125)
                 day += 1
                 dayav = 0
                 dayav2 = 0
@@ -1824,7 +1835,7 @@ if __name__ == '__main__':
                 time.sleep(2.0)
                 console.print("Толя: Вот твой плакат. Только слушай сюда...")
                 time.sleep(2.7)
-                console.print("Толя: У меня тут база клиентов этой вашей Sunne CL. Там ФИО, адреса, телефоны. Могу слить тебе за 15 очков. Пригодится.")
+                console.print("Толя: У меня тут база клиентов этой вашей Sunne CL. Там ФИО, адреса, телефоны. Могу слить тебе за 80 очков. Пригодится.")
                 time.sleep(2.7)
                 console.print("[green]Выбор: [/]")
                 console.print("[green]1. Купить базу за 80 очков[/]")
