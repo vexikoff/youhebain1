@@ -232,6 +232,7 @@ vexi = 0
 knj = 0
 sport = 0
 tolya22 = 0
+ent2 = 0
 cooldowns = {
     "pomit": 0,
     "pomitp": 0,
@@ -2418,14 +2419,19 @@ if __name__ == '__main__':
                 if knj == 0 and juing == 0:
                     console.print("вам нечего осматривать")
                 console.print("[green]3 - Закрыть Рьюкзак[/]")
-                if int(ent) == 1 and knj == 1:
+                ent2 = Prompt.ask(
+                    "Выбор:", 
+                    choices=["1", "2", "3"], 
+                    default="3"
+                )
+                if ent2 == 1 and knj == 1:
                     console.print("вы начинайте осмотратривать кинжал...")
                     time.sleep(2)
                     console.print("вы видите на нём неизвестный логотип...")
                     time.sleep(2)
                     console.print("он выглядит так, как будто им кто то пользовался...")
                     time.sleep(2)
-                if int(ent) == 2 and juing == 1:
+                if ent2 == 2 and juing == 1:
                     console.print("вы начинайте осмотратривать унитаз...")
                     time.sleep(2)
                     console.print("выглядит как обычный унитаз...")
@@ -2436,10 +2442,9 @@ if __name__ == '__main__':
                     time.sleep(2)
                     console.print("вы нажимаете на кнопку, и он говорит \"Привет! Чем могу помочь?\"")
                     time.sleep(2)
-                elif int(ent) == 3:
+                elif ent2 == 3:
                     console.print("[white]Вы закрыли рюкзак.[/]")
                     time.sleep(1)
-                time.sleep(5)
                 
                 in_action = False    
 
