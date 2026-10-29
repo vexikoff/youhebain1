@@ -839,7 +839,7 @@ def koncovka_dolgo():
     os._exit(0)
 
 async def main():
-    global pomit, v220, pomitp, dike, ksosna, tormoz, darkness, truba, vanya, musor, michc, sport, vany, vexi, ochkonet, knj, nevernulday, nevernul, dro, cdis, cdiss, igr, dss, drc, ochko, zvonok, zvv, rib, rrib, opencr, gamecorp, day, posilka, data_base, chh, dayav, dayav2, mmv, mmv2, imya, ddv, gvozd, in_action, tolea_sdan, psiholog, paranoya_day, paranoya_shown, koncovka_active, mearephone, tolya_dialog, path_tolya, path_police, police, vany
+    global pomit, v220, pomitp, dike, ksosna, tormoz, musordrop, darkness, truba, vanya, musor, michc, sport, vany, vexi, ochkonet, knj, nevernulday, nevernul, dro, cdis, cdiss, igr, dss, drc, ochko, zvonok, zvv, rib, rrib, opencr, gamecorp, day, posilka, data_base, chh, dayav, dayav2, mmv, mmv2, imya, ddv, gvozd, in_action, tolea_sdan, psiholog, paranoya_day, paranoya_shown, koncovka_active, mearephone, tolya_dialog, path_tolya, path_police, police, vany
     
     global cooldowns
     cooldowns["call"] = time.time() + random.uniform(15.0, 40.0)
@@ -941,6 +941,8 @@ async def main():
                 available_calls.append(22)
             if day >= 2 and v220 == 0:
                 available_calls.append(23)
+            if day >= 20 and musordrop == 0:
+                available_calls.append(24)
             
             if len(available_calls) > 0 and not in_action:
                 zvv = True
@@ -2258,6 +2260,23 @@ async def main():
                             time.sleep(2)
                         v220 = 1
                         save_game()
+                    elif ra == 24:
+                        os.system('cls' if os.name == 'nt' else 'clear')
+                        console.print(
+                            "(Данный диалог не призывает никого к азартным играм)")
+                        time.sleep(1.2)
+                        console.print("МУСОР ДРОП: ТВОЙ ВЫСОКИЙ ШАНС НА БОЛЬШОЙ ДРОП — МУСОР ДРОП")
+                        time.sleep(2)
+                        console.print("Вы: Че?")
+                        time.sleep(2)
+                        console.print(
+                            "МУСОР ДРОП: ТВОЙ ВЫСОКИЙ ШАНС НА БОЛЬШОЙ ДРОП — МУСОР ДРОП")
+                        time.sleep(2)
+                        console.print("Вы: че ты несешь")
+                        time.sleep(2)
+                        console.print(
+                            "МУСОР ДРОП: ТВОЙ ВЫСОКИЙ ШАНС НА БОЛЬШОЙ ДРОП — МУСОР ДРОП")
+                        time.sleep(2)
                     else:
                         console.print("Вы упустили важное")
                     
