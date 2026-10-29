@@ -212,13 +212,14 @@ def save_game():
         "ochkonet": ochkonet,
         "vzorv": vzorv,
         "vany": vany,
-        "vanya": vanya
+        "vanya": vanya,
+        "ksosna": ksosna
     }
     with open("save.json", "w") as f:
         json.dump(save_data, f)
 
 def load_game():
-    global ochko, pomit, chkj, vzorv, vany, vanya, tormoz, ochkonet, netsv, nevernulday, mich, sport, michc, pomitp, nevernul, tolya22, daytolya, musor, cdis, vexi, cdiss, gamecorpscam, dro, igr, drc, dss, rib, juing, rrib, opencr, gamecorp, dike, day, posilka, data_base, chh, dayav, ddv, mmv, dayav2, mmv2, imya, gvozd, police, tolea_sdan, psiholog, paranoya_day, paranoya_shown, koncovka_active, mearephone, tolya_dialog, path_tolya, path_police, knj
+    global ochko, pomit, chkj, ksosna, vzorv, vany, vanya, tormoz, ochkonet, netsv, nevernulday, mich, sport, michc, pomitp, nevernul, tolya22, daytolya, musor, cdis, vexi, cdiss, gamecorpscam, dro, igr, drc, dss, rib, juing, rrib, opencr, gamecorp, dike, day, posilka, data_base, chh, dayav, ddv, mmv, dayav2, mmv2, imya, gvozd, police, tolea_sdan, psiholog, paranoya_day, paranoya_shown, koncovka_active, mearephone, tolya_dialog, path_tolya, path_police, knj
     try:
         with open("save.json", "r") as f:
             save_data = json.load(f)
@@ -276,6 +277,7 @@ def load_game():
             vzorv = save_data.get("vzorv", 0)
             vany = save_data.get("vany", 0)
             vanya = save_data.get("vanya", 0)
+            ksosna = save_data.get("ksosna", 0)
             return True
     except FileNotFoundError:
         return False
@@ -374,6 +376,7 @@ ochkonet = 300
 vzorv = 0
 vany = 0
 vanya = 0
+ksosna = 0
 cooldowns = {
     "pomit": 0,
     "pomitp": 0,
@@ -824,7 +827,7 @@ def koncovka_dolgo():
     os._exit(0)
 
 async def main():
-    global pomit, pomitp, dike, tormoz, vanya, musor, michc, sport, vany, vexi, ochkonet, knj, nevernulday, nevernul, dro, cdis, cdiss, igr, dss, drc, ochko, zvonok, zvv, rib, rrib, opencr, gamecorp, day, posilka, data_base, chh, dayav, dayav2, mmv, mmv2, imya, ddv, gvozd, in_action, tolea_sdan, psiholog, paranoya_day, paranoya_shown, koncovka_active, mearephone, tolya_dialog, path_tolya, path_police, police, vany
+    global pomit, pomitp, dike, ksosna, tormoz, vanya, musor, michc, sport, vany, vexi, ochkonet, knj, nevernulday, nevernul, dro, cdis, cdiss, igr, dss, drc, ochko, zvonok, zvv, rib, rrib, opencr, gamecorp, day, posilka, data_base, chh, dayav, dayav2, mmv, mmv2, imya, ddv, gvozd, in_action, tolea_sdan, psiholog, paranoya_day, paranoya_shown, koncovka_active, mearephone, tolya_dialog, path_tolya, path_police, police, vany
     
     global cooldowns
     cooldowns["call"] = time.time() + random.uniform(15.0, 40.0)
@@ -916,6 +919,8 @@ async def main():
                 available_calls.append(17)
             if day >= 4 and vanya == 0:
                 available_calls.append(18)
+            if day >= 5 and ksosna == 0:
+                available_calls.append(19)
             
             if len(available_calls) > 0 and not in_action:
                 zvv = True
@@ -2035,10 +2040,20 @@ async def main():
                             default="1"
                         )
                         if otzz20 == "1":
-                            console.print("Вы: вы не можете чувствовать")
+                            console.print("Вы: покупаю")
                             time.sleep(2)
                             console.print(
-                                "Кот в сосне: мы коты, мы чувствуем все, особенно деньги, 500 очков на крипту делай")
+                                "Кот в сосне: отлично")
+                            time.sleep(2)
+                            console.print("[white]Спустя день крипта упала в 0, рагпул. [/]")
+                            time.sleep(2)
+                            ksosna = 1
+                            save_game()
+                        elif otzz20 == "2":
+                            console.print("Вы: не хочется, я чувствую лучше")
+                            time.sleep(2)
+                            console.print(
+                                "Кот в сосне: мы вам перезвоним")
                             time.sleep(2)
                     else:
                         console.print("Вы упустили важное")
