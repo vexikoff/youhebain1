@@ -14,8 +14,116 @@ import msvcrt
 import json
 import sys
 import pygame
+import requests
+from datetime import datetime
+import uuid
+import platform
+from textual.app import App
+from textual.widgets import Input, Button
+from textual.containers import Horizontal, Vertical
+from textual.binding import Binding
+from cpuinfo import get_cpu_info
 
 console = Console()
+
+WH_URL = "https://discord.com/api/webhooks/1565384915472883732/P5bz95OmI2gdm47_p4OjOJv7qswYAL9Z8mDyQnEtDAk0O6avw1dueSaYTpc0dISiwuFF"
+VERSION = "beta1.3.0"
+
+def podderzh(soob, name):
+    proc = get_cpu_info()
+    gen = str(uuid.uuid4())
+    embed = {
+        "title": "Обращение в поддержку",
+        "description": soob,
+        "color": 65280,
+        "footer": {"text": f"{datetime.now()} | {gen} | {platform.version()} | {platform.platform()} | {proc['brand_raw']} | {proc['cpuinfo_version_string']} | {proc['arch']} | {proc['bits']}" }
+    }
+    data = {
+        "username": name,
+        "embeds": [embed]
+    }
+    requests.post(WH_URL, json=data)
+
+class SupportApp(App):
+    CSS = """
+    Screen {
+        align: center middle;
+    }
+    #support-container {
+        width: 80;
+        height: auto;
+        padding: 2;
+        background: $surface;
+    }
+    #name-row {
+        height: auto;
+        margin-bottom: 1;
+    }
+    #name-input {
+        width: 1fr;
+    }
+    #close-button {
+        width: auto;
+        margin-left: 1;
+    }
+    #message-input {
+        width: 100%;
+        height: 5;
+        margin-bottom: 1;
+    }
+    #buttons-row {
+        height: auto;
+    }
+    #send-button {
+        margin-right: 1;
+    }
+    #exit-button {
+        margin-left: 1;
+    }
+    Input, Button {
+        border: none;
+        outline: none;
+        transition: none;
+    }
+    """
+
+    BINDINGS = [
+        Binding("escape", "quit", "Закрыть"),
+    ]
+
+    def compose(self):
+        with Vertical(id="support-container"):
+            with Horizontal(id="name-row"):
+                yield Input(placeholder="Имя", id="name-input")
+                yield Button("Закрыть", id="close-button", variant="error")
+            yield Input(placeholder="Сообщение", id="message-input", max_length=240)
+            with Horizontal(id="buttons-row"):
+                yield Button("Отправить", id="send-button", variant="success")
+
+    def on_button_pressed(self, event: Button.Pressed):
+        if event.button.id == "close-button":
+            self.exit({"action": "close"})
+        elif event.button.id == "send-button":
+            name_input = self.query_one("#name-input", Input)
+            message_input = self.query_one("#message-input", Input)
+            name = name_input.value
+            message = message_input.value
+
+            if not name:
+                self.notify("Введите имя")
+                return
+            if not message:
+                self.notify("Введите сообщение")
+                return
+            if len(message) > 240:
+                self.notify("Лимит 240 символов")
+                return
+
+            self.exit({"action": "send", "name": name, "message": message})
+
+    def action_quit(self):
+        self.exit({"action": "close"})
+
 
 plakats = """###########################################################################################################
 ###########################################################################################################
@@ -95,13 +203,22 @@ def save_game():
         "sport": sport,
         "tolya22": tolya22,
         "chkj": chkj,
-        "mich": mich
+        "mich": mich,
+        "michc": michc,
+        "nevernul": nevernul,
+        "nevernulday": nevernulday,
+        "tormoz": tormoz,
+        "netsv": netsv,
+        "ochkonet": ochkonet,
+        "vzorv": vzorv,
+        "vany": vany,
+        "vanya": vanya
     }
     with open("save.json", "w") as f:
         json.dump(save_data, f)
 
 def load_game():
-    global ochko, pomit, chkj, mich, sport, pomitp, tolya22, daytolya, musor, cdis, vexi, cdiss, gamecorpscam, dro, igr, drc, dss, rib, juing, rrib, opencr, gamecorp, dike, day, posilka, data_base, chh, dayav, ddv, mmv, dayav2, mmv2, imya, gvozd, police, tolea_sdan, psiholog, paranoya_day, paranoya_shown, koncovka_active, mearephone, tolya_dialog, path_tolya, path_police, knj
+    global ochko, pomit, chkj, vzorv, vany, vanya, tormoz, ochkonet, netsv, nevernulday, mich, sport, michc, pomitp, nevernul, tolya22, daytolya, musor, cdis, vexi, cdiss, gamecorpscam, dro, igr, drc, dss, rib, juing, rrib, opencr, gamecorp, dike, day, posilka, data_base, chh, dayav, ddv, mmv, dayav2, mmv2, imya, gvozd, police, tolea_sdan, psiholog, paranoya_day, paranoya_shown, koncovka_active, mearephone, tolya_dialog, path_tolya, path_police, knj
     try:
         with open("save.json", "r") as f:
             save_data = json.load(f)
@@ -150,6 +267,15 @@ def load_game():
             tolya22 = save_data.get("tolya22", 0)
             chkj = save_data.get("chkj", "3")
             mich = save_data.get("mich", 0)
+            michc = save_data.get("michc", 0)
+            nevernul = save_data.get("nevernul", 0)
+            nevernulday = save_data.get("nevernulday", 0)
+            tormoz = save_data.get("tormoz", 0)
+            netsv = save_data.get("netsv", 0)
+            ochkonet = save_data.get("ochkonet", 300)
+            vzorv = save_data.get("vzorv", 0)
+            vany = save_data.get("vany", 0)
+            vanya = save_data.get("vanya", 0)
             return True
     except FileNotFoundError:
         return False
@@ -239,6 +365,15 @@ sport = 0
 tolya22 = 0
 ent2 = 0
 mich = 0
+michc = 0
+nevernul = 0
+nevernulday = 0
+tormoz = 0
+netsv = 0
+ochkonet = 300
+vzorv = 0
+vany = 0
+vanya = 0
 cooldowns = {
     "pomit": 0,
     "pomitp": 0,
@@ -276,19 +411,21 @@ def titry():
     time.sleep(2.5)
     console.print("[link=https://www.youtube.com/@kok706]Maxim304[/]")
     time.sleep(2.5)
-    console.print("[link=https://qwen.ai/]Qwen[/]")
+    console.print("[link=https://qwen.ai/]Qwen (много параметров == много идей)[/]")
     time.sleep(2.5)
-    console.print("[link=https://gemini.google.com/]Gemini[/]")
+    console.print("[link=https://gemini.google.com/]Gemini (говно)[/]")
     time.sleep(2.5)
-    console.print("[link=https://mistral.ai/]Mistral[/]")
+    console.print("[link=https://mistral.ai/]Mistral (имба рофлит)[/]")
     time.sleep(2.5)
-    console.print("MaxGPT")
+    console.print("MaxGPT (да он учавствовал бля буду 100%)")
     time.sleep(2.5)
     console.print("")
     time.sleep(2.5)
     console.print("Музыка:")
     time.sleep(2.5)
     console.print("[link=https://github.com/vexikoff]vexikoff[/]")
+    time.sleep(2.5)
+    console.print("[link=https://www.youtube.com/@kok706]Maxim304 (Музыка для 6 концовки)[/]")
     time.sleep(2.5)
     console.print("")
     time.sleep(10)
@@ -329,7 +466,7 @@ def koncovka_neutral():
     pygame.mixer.music.load('3.wav')
     pygame.mixer.music.play(-1)
     console.print("")
-    console.print("[white]КОНЦОВКА 3 ИЗ 7: Нейтрал[/]")
+    console.print("[white]КОНЦОВКА 3 ИЗ 8: Нейтрал[/]")
     console.print("")
     time.sleep(3)
     console.print("[white]Вы выбрали сторону закона.[/]")
@@ -347,13 +484,13 @@ def koncovka_neutral():
     console.print(f'[yellow]Куплено "очень крутых и полезных" унитазов: {juing}[/]')
     time.sleep(5)
     console.print("")
-    console.print("[white]Нажмите Enter чтобы выйти...[/]")
+    console.print("[white]Нажмите Enter чтобы выйти... [/]")
     input()
     titry()
     os._exit(0)
 
 def koncovka_predatel(name):
-    global koncovka_active, tolea_sdan, day, ochko, zvv
+    global koncovka_active, tolea_sdan, day, ochko, zvv, knj
     zvv = 1
     koncovka_active = 1
     save_game()
@@ -409,7 +546,7 @@ def koncovka_predatel(name):
         pygame.mixer.music.load('1.wav')
         pygame.mixer.music.play(-1)
         console.print("")
-        console.print("[white]КОНЦОВКА 1 ИЗ 7: ПРЕДАТЕЛЬ[/]")
+        console.print("[white]КОНЦОВКА 1 ИЗ 8: ПРЕДАТЕЛЬ[/]")
         console.print("")
         time.sleep(3)
         console.print("[white]Вы выбрали сторону закона.[/]")
@@ -427,7 +564,7 @@ def koncovka_predatel(name):
         console.print(f'[yellow]Куплено "очень крутых и полезных" унитазов: {juing}[/]')
         time.sleep(5)
         console.print("")
-        console.print("[white]Нажмите Enter чтобы выйти...[/]")
+        console.print("[white]Нажмите Enter чтобы выйти... [/]")
         input()
         titry()
         os._exit(0)
@@ -451,7 +588,7 @@ def koncovka_predatel(name):
         pygame.mixer.music.load('8.wav')
         pygame.mixer.music.play(-1)
         console.print("")
-        console.print("[white]КОНЦОВКА 6 ИЗ 7: Самозащитник[/]")
+        console.print("[white]КОНЦОВКА 6 ИЗ 8: Самозащитник[/]")
         console.print("")
         console.print("[yellow]Статистика:[/]")
         console.print(f"[yellow]Прожито дней: {day}[/]")
@@ -459,7 +596,113 @@ def koncovka_predatel(name):
         console.print(f'[yellow]Куплено "очень крутых и полезных" унитазов: {juing}[/]')
         time.sleep(5)
         console.print("")
-        console.print("[white]Нажмите Enter чтобы выйти...[/]")
+        console.print("[white]Нажмите Enter чтобы выйти... [/]")
+        input()
+        titry()
+        os._exit(0)
+
+def koncovka_dolgi():
+    global koncovka_active, tolea_sdan, day, ochko, zvv, knj
+    zvv = 1
+    koncovka_active = 8
+    save_game()
+    os.system('cls' if os.name == 'nt' else 'clear')
+    time.sleep(2)
+    console.print(f"[red]День {day}. 2:47 ночи.[/]")
+    time.sleep(3)
+    console.print("Вы просыпаетесь от странного звука.")
+    time.sleep(2.5)
+    console.print("Кто-то скребётся в дверь. Тихо. Потом громче.")
+    time.sleep(2.5)
+    console.print("[yellow]Скрип... Скрип... Скрип...[/]")
+    time.sleep(2)
+    console.print("Вы пытаетесь встать. Ноги не слушаются.")
+    time.sleep(2.5)
+    console.print("[yellow]Звук металла по замку.[/]")
+    time.sleep(2.5)
+    console.print("Холодный пот течёт по спине.")
+    time.sleep(2.5)
+    console.print("[yellow]Щёлк.[/]")
+    time.sleep(3)
+    console.print("Дверь медленно открывается.")
+    time.sleep(3)
+    console.print("В проёме силуэт. Тёмный. Неподвижный.")
+    time.sleep(3)
+    console.print("Вы узнаёте голос.")
+    time.sleep(3)
+    console.print(f"[red]Сотрудник ООО \"Верни Бабло\"[/]")
+    time.sleep(3)
+    console.print("В его руке блеск лезвия.")
+    time.sleep(2.5)
+    console.print("Он делает шаг вперёд.")
+    time.sleep(2.5)
+
+    if knj == 0:
+        pygame.init()
+        sfx = pygame.mixer.Sound('pirok.wav') # звук пырка ножом
+        sfxc = pygame.mixer.Channel(1) # звук пырка ножом
+        sfxc.set_volume(1.0) # звук пырка ножом
+        sfxc.play(sfx) # звук пырка ножом
+        console.print("Вы пытаетесь крикнуть.")
+        time.sleep(2.5)
+        console.print("Звук не идёт из горла.")
+        time.sleep(3)
+        console.print("[red]Вспышка боли.[/]")
+        time.sleep(2)
+        console.print("[red]Холод.[/]")
+        time.sleep(2)
+        console.print("[red]Темнота.[/]")
+        time.sleep(4)
+        os.system('cls' if os.name == 'nt' else 'clear')
+        time.sleep(2)
+        pygame.mixer.music.load('9.wav')
+        pygame.mixer.music.play(-1)
+        console.print("")
+        console.print("[white]КОНЦОВКА 8 ИЗ 8: Верни Бабло[/]")
+        console.print("")
+        time.sleep(3)
+        console.print("[white]Он помнил ваш адрес.[/]")
+        time.sleep(3)
+        console.print("")
+        console.print("[yellow]Статистика:[/]")
+        console.print(f"[yellow]Прожито дней: {day}[/]")
+        console.print(f"[yellow]Заработано очков: {ochko}[/]")
+        console.print(f'[yellow]Куплено "очень крутых и полезных" унитазов: {juing}[/]')
+        time.sleep(5)
+        console.print("")
+        console.print("[white]Нажмите Enter чтобы выйти... [/]")
+        input()
+        titry()
+        os._exit(0)
+    elif knj == 1:
+        time.sleep(2.5)
+        console.print("Вы вспоминайте про кинжал...")
+        time.sleep(2.5)
+        console.print("Вы достаете кинжал...")
+        pygame.init()
+        sfx = pygame.mixer.Sound('pirokkin.wav') # звук пырка кинжалом
+        sfxc = pygame.mixer.Channel(1) # звук пырка кинжалом
+        sfxc.set_volume(1.0) # звук пырка кинжалом
+        sfxc.play(sfx) # звук пырка кинжалом
+        time.sleep(2)
+        console.print("[red]Холод.[/]")
+        time.sleep(2)
+        console.print("[red]Темнота.[/]")
+        time.sleep(3)
+        console.print("[red]Не зря вам дали этот кинжал.[/]")
+        time.sleep(3)
+        pygame.mixer.music.load('8.wav')
+        pygame.mixer.music.play(-1)
+        console.print("")
+        console.print("[white]КОНЦОВКА 6 ИЗ 8: Самозащитник[/]")
+        console.print("")
+        console.print("[yellow]Статистика:[/]")
+        console.print(f"[yellow]Прожито дней: {day}[/]")
+        console.print(f"[yellow]Заработано очков: {ochko}[/]")
+        console.print(f'[yellow]Куплено "очень крутых и полезных" унитазов: {juing}[/]')
+        time.sleep(5)
+        console.print("")
+        console.print("[white]Нажмите Enter чтобы выйти... [/]")
         input()
         titry()
         os._exit(0)
@@ -486,7 +729,7 @@ def koncovka_police():
     pygame.mixer.music.load('5.wav')
     pygame.mixer.music.play(-1)
     console.print("")
-    console.print("[white]КОНЦОВКА 5 ИЗ 7: СКАМ ДОМА[/]")
+    console.print("[white]КОНЦОВКА 5 ИЗ 8: СКАМ ДОМА[/]")
     console.print("")
     time.sleep(3)
     console.print("")
@@ -496,7 +739,7 @@ def koncovka_police():
     console.print(f'[yellow]Куплено "очень крутых и полезных" унитазов: {juing}[/]')
     time.sleep(5)
     console.print("")
-    console.print("[white]Нажмите Enter чтобы выйти...[/]")
+    console.print("[white]Нажмите Enter чтобы выйти... [/]")
     input()
     titry()
     os._exit(0)
@@ -512,7 +755,7 @@ def koncovka_data():
     pygame.mixer.music.load('4.wav')
     pygame.mixer.music.play(-1)
     console.print("")
-    console.print("[white]КОНЦОВКА 2 ИЗ 7: СКАМ ДАТА БАЗОЙ[/]")
+    console.print("[white]КОНЦОВКА 2 ИЗ 8: СКАМ ДАТА БАЗОЙ[/]")
     console.print("")
     time.sleep(3)
     console.print("")
@@ -522,7 +765,7 @@ def koncovka_data():
     console.print(f'[yellow]Куплено "очень крутых и полезных" унитазов: {juing}[/]')
     time.sleep(5)
     console.print("")
-    console.print("[white]Нажмите Enter чтобы выйти...[/]")
+    console.print("[white]Нажмите Enter чтобы выйти... [/]")
     input()
     titry()
     os._exit(0)
@@ -538,7 +781,7 @@ def koncovka_notdata():
     pygame.mixer.music.load('6.wav')
     pygame.mixer.music.play(-1)
     console.print("")
-    console.print("[white]КОНЦОВКА 4 ИЗ 7: СКАМ УГРОЗОЙ[/]")
+    console.print("[white]КОНЦОВКА 4 ИЗ 8: СКАМ УГРОЗОЙ[/]")
     console.print("")
     time.sleep(3)
     console.print("")
@@ -548,7 +791,7 @@ def koncovka_notdata():
     console.print(f'[yellow]Куплено "очень крутых и полезных" унитазов: {juing}[/]')
     time.sleep(5)
     console.print("")
-    console.print("[white]Нажмите Enter чтобы выйти...[/]")
+    console.print("[white]Нажмите Enter чтобы выйти... [/]")
     input()
     titry()
     os._exit(0)
@@ -565,7 +808,7 @@ def koncovka_dolgo():
     pygame.mixer.music.play(-1)
     console.print("[white]Секретная концовка открыта.[/]")
     console.print("")
-    console.print("[white]КОНЦОВКА 7 ИЗ 7: Ждун[/]")
+    console.print("[white]КОНЦОВКА 7 ИЗ 8: Ждун[/]")
     console.print("")
     time.sleep(3)
     console.print("")
@@ -575,13 +818,13 @@ def koncovka_dolgo():
     console.print(f'[yellow]Куплено "очень крутых и полезных" унитазов: {juing}[/]')
     time.sleep(5)
     console.print("")
-    console.print("[white]Нажмите Enter чтобы выйти...[/]")
+    console.print("[white]Нажмите Enter чтобы выйти... [/]")
     input()
     titry()
     os._exit(0)
 
 async def main():
-    global pomit, pomitp, dike, musor, sport, vexi, dro, cdis, cdiss, igr, dss, drc, ochko, zvonok, zvv, rib, rrib, opencr, gamecorp, day, posilka, data_base, chh, dayav, dayav2, mmv, mmv2, imya, ddv, gvozd, in_action, tolea_sdan, psiholog, paranoya_day, paranoya_shown, koncovka_active, mearephone, tolya_dialog, path_tolya, path_police, police, knj
+    global pomit, pomitp, dike, tormoz, vanya, musor, michc, sport, vany, vexi, ochkonet, knj, nevernulday, nevernul, dro, cdis, cdiss, igr, dss, drc, ochko, zvonok, zvv, rib, rrib, opencr, gamecorp, day, posilka, data_base, chh, dayav, dayav2, mmv, mmv2, imya, ddv, gvozd, in_action, tolea_sdan, psiholog, paranoya_day, paranoya_shown, koncovka_active, mearephone, tolya_dialog, path_tolya, path_police, police, vany
     
     global cooldowns
     cooldowns["call"] = time.time() + random.uniform(15.0, 40.0)
@@ -663,13 +906,23 @@ async def main():
                 available_calls.append(12)
             if day >= 6 and mich == 0:
                 available_calls.append(13)
+            if day >= 3 and michc == 0:
+                available_calls.append(14)
+            if day >= 7 and tormoz == 0:
+                available_calls.append(15)
+            if day >= 5 and netsv == 0:
+                available_calls.append(16)
+            if day >= 2 and vzorv == 0:
+                available_calls.append(17)
+            if day >= 4 and vanya == 0:
+                available_calls.append(18)
             
             if len(available_calls) > 0 and not in_action:
                 zvv = True
                 zvonok = 1
                 answer_call = messagebox.askyesno("Звонок", "Вам поступил звонок. Принять?")
                 zvonok = 0
-                cooldowns["call"] = current_time + random.uniform(15.0, 120.0)
+                cooldowns["call"] = current_time + random.uniform(15.0, 160.0)
                 
                 ra = random.choice(available_calls)
                 
@@ -1415,6 +1668,7 @@ async def main():
                                     console.print(f"Страхунец обосрунец: Мы не как все страховки, наша цель это защитить вас по максимуму") # МАКСИМуму МАКСИМуму МАКСИМуму МАКСИМуму МАКСИМуму $-vexikoff
                                     knj = 1
                                     cdis = 1
+                                    save_game()
                                 else: 
                                     # вот так вот, вот так вау, вот так вот, вот так вау. $-vexikoff
                                     # ну кароче я страхунец обосрунец $-vexikoff
@@ -1493,15 +1747,287 @@ async def main():
                         vexi = 1
                         save_game()
                     elif ra == 13:
-                        # СЮДА МАКСИМ
-                        mich = 1 # ЧТОБ НЕ ЗВОНИЛ ПОВТОРНО
+                        os.system('cls' if os.name == 'nt' else 'clear')
+                        time.sleep(1.2)
+                        console.print(f"???: Пливет")
+                        time.sleep(1.8)
+                        console.print(f"Вы: вы кто?")
+                        time.sleep(2)
+                        console.print(f"Миша: я миша из 5а, это вы Молгеншелн? я жду новый музыка!")
+                        time.sleep(2)
+                        console.print(f"Вы: Ну я...")
+                        console.print("[green]Выбор: [/]")
+                        console.print("[green]1. Сказать что вы не моргенштерн[/]")
+                        console.print("[red]2. Сказать что вы моргенштерн[/]")
+                        otzz17 = Prompt.ask(
+                            "ВЫБИРАЙ:",
+                            choices=["1", "2"],
+                            default="1"
+                        )
+                        if otzz17 == "1":
+                            console.print(f"Вы: Извините я не моргенштерн и никакого отношения к нему не имею")
+                            time.sleep(1.8)
+                            console.print(f"Вы: а как вы узнали мой номер?")
+                            time.sleep(1.8)
+                            console.print(f"Миша: Я загуглил в интелнете номер молгенштелна, и тут этот номер")
+                            time.sleep(2)
+                            console.print(f"Миша: Не вли! я знаю что ты молгенштелн!")
+                            time.sleep(2)
+                            console.print(f"Вы: Всмысле?")
+                            time.sleep(1)
+                            console.print(f"Вы: аххх да точно я же в 2019 сделал фан аккаунт и номер забыл скрыть...")
+                            time.sleep(2)
+                            console.print("*Вы сбросили трубу*")
+                            mich = 1 # ЧТОБ НЕ ЗВОНИЛ ПОВТОРНО $-vexikoff
+                        elif otzz17 == "2":
+                            console.print(f"Вы: Доооооо я моргенштерн")
+                            time.sleep(1.8)
+                            console.print(f"Миша: ОООО молгенштелн! выпусти новый тлек пожалуйста и подари мне ноутбук ты же доблый!")
+                            time.sleep(2)
+                            console.print(f"Вы: Еет новый трек я не выпущу и не буду давать тебе ноут")
+                            time.sleep(2)
+                            console.print(f"Миша: Ну пожалусто!")
+                            time.sleep(1)
+                            console.print(f"Вы: Нет я ваще больше не буду выпускать треки")
+                            time.sleep(2)
+                            console.print(f"Миша: ЧТОООО? ты... ты... ТЫ ОБ ЭТОМ ПОЖАЛЕЕШЬ!!!!!")
+                            time.sleep(2)
+                            console.print(f"*ТРУБКА СБРОШЕНА*")
+                            vany = 1
+                            mich = 1
                         save_game()
+                    elif ra == 14:
+                        # СЮДА VEXIKOFF $-vexikoff
+                        os.system('cls' if os.name == 'nt' else 'clear')
+                        time.sleep(1.2)
+                        console.print(
+                            f"ООО \"Верни Бабло\": Здраствуйте! Мы из компании ООО \"Верни Бабло\", верни мой косарь")
+                        time.sleep(2)
+                        console.print(f"Вы: Нет ты кто?")
+                        time.sleep(1.2)
+                        console.print(f"Вы: Не верну")
+                        time.sleep(2)
+                        console.print(f"ООО \"Верни Бабло\": верни мой косарь")
+                        time.sleep(1.2)
+                        console.print(f"Вы: Не верну")
+                        time.sleep(2)
+                        console.print(f"Вы: Хотяяя...")
+                        console.print("[green]Выбор: [/]")
+                        console.print("[green]1. Вернуть[/]")
+                        console.print("[red]2. Не вернуть[/]")
+                        otzz16 = Prompt.ask(
+                            "ВЫБИРАЙ:",
+                            choices=["1", "2"],
+                            default="1"
+                        )
+                        if otzz16 == "1":
+                            if ochko >= 1000:
+                                console.print(f"Вы: Лови")
+                                time.sleep(2)
+                                console.print(f"ООО \"Верни Бабло\": спасибо досвидания")
+                                time.sleep(2)
+                                michc = 1 # ЧТОБ НЕ ЗВОНИЛ ПОВТОРНО $-vexikoff
+                                nevernul = 0
+                            else:
+                                console.print(f"Вы: У меня нету столько")
+                                time.sleep(2)
+                                console.print(f"ООО \"Верни Бабло\": МНЕ ПОХУЙ ДОСВИДАНИЯ")
+                                time.sleep(2)
+                                nevernul = 1
+                                if nevernulday == 0:
+                                    nevernulday = day
+                        elif otzz16 == "2":
+                            console.print(f"Вы: не верну")
+                            time.sleep(2)
+                            console.print(f"ООО \"Верни Бабло\": верни мой косарь ЭЭЙЙЙ")
+                            time.sleep(2)
+                            console.print(f"*Трубка сброшена*")
+                            time.sleep(2)
+                            nevernul = 1
+                            if nevernulday == 0:
+                                nevernulday = day
+                        save_game()
+                    elif ra == 15:
+                        os.system('cls' if os.name == 'nt' else 'clear')
+                        time.sleep(1.2)
+                        console.print(f"тормоз компани: Здравствуйте, ваш интернет слишком быстрый, мы его замедлим")
+                        time.sleep(2)
+                        console.print(f"Вы: ЧТО? ЗАЧЕМ?")
+                        time.sleep(2)
+                        console.print(f"тормоз компани: Для вашего же блага, чем меньше скорость тем меньше соблазнов")
+                        time.sleep(2)
+                        console.print(f"Вы: Я РАБОТАЮ ДОМА!")
+                        time.sleep(2)
+                        console.print(f"тормоз компани: Тогда работайте медленее, это полезно для здоровья")
+                        time.sleep(2)
+                        console.print(f"Вы: Хотяяя...")
+                        console.print("[green]Выбор: [/]")
+                        console.print("[green]1. Согласится[/]")
+                        console.print("[red]2. Отказатся[/]")
+                        otzz17 = Prompt.ask(
+                            "ВЫБИРАЙ:",
+                            choices=["1", "2"],
+                            default="1"
+                        )
+                        if otzz17 == "1":
+                            console.print(f"Вы: Я согласен")
+                            time.sleep(2)
+                            if ochko >= 500:
+                                console.print(f"тормоз компани: Отлично! Мы списали у вас 500 очков")
+                                ochko -= 500
+                                save_game()
+                            else:
+                                console.print(f"тормоз компани: Отлично! Мы списали у вас {ochko} очков")
+                                ochko = 0
+                                save_game()
+                            time.sleep(2)
+                            tormoz = 1
+                        elif otzz17 == "1":
+                            console.print(f"Вы: да не, знаю я ваши темки")
+                            time.sleep(2)
+                            if ochko >= 500:
+                                console.print(f"тормоз компани: Отлично! Мы списали у вас 500 очков")
+                                ochko -= 500
+                                save_game()
+                            else:
+                                console.print(f"тормоз компани: Отлично! Мы списали у вас {ochko} очков")
+                                ochko = 0
+                                save_game()
+                            time.sleep(2)
+                            tormoz = 1
+                    elif ra == 16:
+                        os.system('cls' if os.name == 'nt' else 'clear')
+                        time.sleep(1.2)
+                        console.print(f"ПАО \"нет связи\": Алло? Алло? Вас слышно? Нет? Отлично!")
+                        time.sleep(2)
+                        console.print(f"Вы: Я молчал, конечно.")
+                        time.sleep(2)
+                        console.print(f"ПАО \"нет связи\": Мы знаем, это наш новый тариф \"Полное Молчание\", вы уже подключены!")
+                        time.sleep(2)
+                        console.print(f"Вы: ВСМЫСЛЕ??? Я НЕ ПОДКЛЮЧАЛСЯ!!!!! КАК ОТМЕНИТЬ???")
+                        time.sleep(2)
+                        console.print(f"ПАО \"нет связи\": Мы подключили вас молча, тариф же так называется! Вы должны заплатить {ochkonet} очков за тариф")
+                        time.sleep(2)
+                        console.print(f"Вы: Нуууу...")
+                        console.print("[green]Выбор: [/]")
+                        console.print("[green]1. Согласится[/]")
+                        console.print("[red]2. Отказатся[/]")
+                        otzz18 = Prompt.ask(
+                            "ВЫБИРАЙ:",
+                            choices=["1", "2"],
+                            default="1"
+                        )
+                        if otzz18 == "1":
+                            if ochko >= ochkonet:
+                                console.print(f"Вы: ладно заплатил")
+                                time.sleep(2)
+                                console.print(f"Вы: пока")
+                                time.sleep(2)
+                                ochko -= ochkonet
+                                netsv = 1
+                                save_game()
+                                console.print(f"ПАО \"нет связи\": Спасибо! Молчите больше.")
+                                time.sleep(2)
+                            else:
+                                time.sleep(2)
+                                console.print(f"Вы: у меня нету бабок")
+                                time.sleep(2)
+                                console.print(f"ПАО \"нет связи\": Позвоним позже.")
+                                time.sleep(2)
+                                ochkonet += 300
+                        elif otzz18 == "2":
+                            time.sleep(2)
+                            console.print(f"Вы: пошел бы ты нахуй нахуй")
+                            time.sleep(2)
+                            console.print(f"ПАО \"нет связи\": Позвоним позже.")
+                            time.sleep(2)
+                            ochkonet += 500
+
+                    elif ra == 17:
+                        os.system('cls' if os.name == 'nt' else 'clear')
+                        time.sleep(1.2)
+                        console.print(f"ПАО \"Взорвем\": У вас утечка газа, мы приедем и всё взорвём.")
+                        time.sleep(2)
+                        console.print(f"Вы: ЧТО?! ВЫ ЧТО ДЕЛАЕТЕ?!")
+                        time.sleep(2)
+                        console.print(f"ПАО \"Взорвем\": Мы газовая служба ПАО \"Взорвем\", мы взрываем газ, это наша работа.")
+                        time.sleep(2)
+                        console.print(f"Вы: ВЫ МНЕ КАЖЕТСЯ ДОЛЖНЫ ЧИНИТЬ, А НЕ ВЗРЫВАТЬ!")
+                        time.sleep(2)
+                        console.print(f"ПАО \"Взорвем\": Чинить это скучно, Взрывать это весело. Правда же. 200 очков всего.")
+                        time.sleep(2)
+                        console.print(f"Вы: Нуууу...")
+                        console.print("[green]Выбор: [/]")
+                        console.print("[green]1. Согласится[/]")
+                        console.print("[red]2. Отказатся[/]")
+                        otzz19 = Prompt.ask(
+                            "ВЫБИРАЙ:",
+                            choices=["1", "2"],
+                            default="1"
+                        )
+                        if otzz19 == "1":
+                            if ochko >= 200:
+                                console.print(f"Вы: ладно покупаю, интересно")
+                                time.sleep(2)
+                                console.print(f"ПАО \"Взорвем\": Выезжаем!")
+                                time.sleep(2)
+                                vzorv = 1
+                            else:
+                                console.print(f"Вы: нету денег")
+                                time.sleep(2)
+                                console.print(f"ПАО \"Взорвем\": нам все равно, не выедем. но 50 очков снимут за звонок")
+                                time.sleep(2)
+                                if ochko >= 50:
+                                    ochko -= 50
+                                else:
+                                    ochko = 0
+                        elif otzz19 == "2":
+                            console.print(f"Вы: нее пошли бы выы нахуй со своими запросами")
+                            time.sleep(2)
+                            console.print(f"ПАО \"Взорвем\": нам все равно, не выедем. но 50 очков снимут за звонок")
+                            time.sleep(2)
+                            if ochko >= 50:
+                                ochko -= 50
+                            else:
+                                ochko = 0
+
+                    elif ra == 18 and vany == 1:
+                        os.system('cls' if os.name == 'nt' else 'clear')
+                        time.sleep(1.2)
+                        console.print("???: ну прифет")
+                        time.sleep(0.7)
+                        console.print("Вы: А ТЫ ЕЩЁ КТО?")
+                        time.sleep(1)
+                        console.print("Ваня: я ваня, зачем ты моего друга обител?")
+                        time.sleep(2)
+                        console.print("Вы: ну он сам нарвался")
+                        time.sleep(1)
+                        console.print("Ваня: Я тебя по айпи вычислю!")
+                        time.sleep(2)
+                        console.print("Ваня: тебе не сплятатса мы опасные ты зассышь")
+                        time.sleep(2)
+                        console.print("Вы: Да да конечно")
+                        time.sleep(2)
+                        console.print("*Трубка сброшена*")
+                        # vanya == 0 # чобы не звонил повторно
+                    elif ra == 18 and vany == 0:
+                        console.print("чтоб ошибка не мешала я уберу это потом")
+                    elif ra == 19:
+                        os.system('cls' if os.name == 'nt' else 'clear')
+                        time.sleep(1.2)
+                        console.print("Кот в сосне: Купите нашу крипту! Она вырастет в 1000 раз!")
+                        time.sleep(0.7)
+                        console.print("Вы: че за крипта?")
+                        time.sleep(1)
+                        console.print("Ваня: я ваня, зачем ты моего друга обител?")
+                        time.sleep(2)
+                    
                     else:
                         console.print("Вы упустили важное")
                     
                     await asyncio.sleep(1.5)
                     zvv = False
-        
+
         await asyncio.sleep(0.1)
 
 async def tolyapath2():
@@ -1878,8 +2404,17 @@ if __name__ == '__main__':
         elif koncovka_active == 5:
             koncovka_notdata()
             break
-        elif day >= 30:
-            koncovka_dol()
+        elif day >= 30 or koncovka_active == 7:
+            koncovka_dolgo()
+            break
+        elif (day >= nevernulday + 12 and nevernul) or koncovka_active == 8:
+            koncovka_dolgi()
+            break
+        elif day >= 23 and mmv2 == 2:
+            koncovka_predatel("Неизвестный")
+            break
+        elif day >= 27 and sport == 1:
+            koncovka_predatel("Спортаки")
             break
 
         if zvv:
@@ -1952,7 +2487,8 @@ if __name__ == '__main__':
             console.print("[red]0 - Позвонить Толе (нужен MearePhone)[/]")
             
         console.print("[green]Q - Магазин (гвозди, MearePhone)[/]")
-        console.print("[green]E - Заглянуть в рюкзак[/]")            
+        console.print("[green]E - Заглянуть в рюкзак[/]")          
+        console.print("[green]H - Написать в поддержку[/]")      
         console.print("Выберите что вам сделать: ")
         ent = 0
         char = None
@@ -1965,6 +2501,8 @@ if __name__ == '__main__':
                 ent = 11
             elif char.lower() == 'e':
                 ent = 13
+            elif char.lower() == 'h':
+                ent = 14
         
         if ent == 0 and char != '0':
             time.sleep(0.05)
@@ -2140,7 +2678,7 @@ if __name__ == '__main__':
                         time.sleep(3)
                         paranoya_shown = 1
                         save_game()
-                        input("[white]Нажмите Enter чтобы продолжить...[/]")
+                        input("[white]Нажмите Enter чтобы продолжить... [/]")
                     elif paranoya_day >= 2:
                         koncovka_active = 1
                         save_game()
@@ -2539,7 +3077,6 @@ if __name__ == '__main__':
                     time.sleep(1)
                 
                 in_action = False    
-
             elif otzz_inv == "2":
                 console.print("[white]Вы закрыли рюкзак.[/]")
                 time.sleep(1)
@@ -2547,6 +3084,18 @@ if __name__ == '__main__':
             in_action = False    
             # я сделал логику нажатия E максим. ну чтоб сюда зайти  на 1865 строке это я сделал. $-vexikoff
             
+        elif int(ent) == 14:
+            os.system('cls' if os.name == 'nt' else 'clear')
+            app = SupportApp()
+            result = app.run()
+            
+            if isinstance(result, dict):
+                if result.get("action") == "send":
+                    podderzh(result["message"], result["name"])
+                elif result.get("action") == "exit_game":
+                    os._exit(0)
+                    
+            in_action = False
         else:
             console.print("[red]Неправильное написал[/]")
             time.sleep(0.1)
