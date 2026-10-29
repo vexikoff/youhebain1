@@ -213,13 +213,14 @@ def save_game():
         "vzorv": vzorv,
         "vany": vany,
         "vanya": vanya,
-        "ksosna": ksosna
+        "ksosna": ksosna,
+        "darkness": darkness
     }
     with open("save.json", "w") as f:
         json.dump(save_data, f)
 
 def load_game():
-    global ochko, pomit, chkj, ksosna, vzorv, vany, vanya, tormoz, ochkonet, netsv, nevernulday, mich, sport, michc, pomitp, nevernul, tolya22, daytolya, musor, cdis, vexi, cdiss, gamecorpscam, dro, igr, drc, dss, rib, juing, rrib, opencr, gamecorp, dike, day, posilka, data_base, chh, dayav, ddv, mmv, dayav2, mmv2, imya, gvozd, police, tolea_sdan, psiholog, paranoya_day, paranoya_shown, koncovka_active, mearephone, tolya_dialog, path_tolya, path_police, knj
+    global ochko, pomit, chkj, ksosna, vzorv, vany, darkness, vanya, tormoz, ochkonet, netsv, nevernulday, mich, sport, michc, pomitp, nevernul, tolya22, daytolya, musor, cdis, vexi, cdiss, gamecorpscam, dro, igr, drc, dss, rib, juing, rrib, opencr, gamecorp, dike, day, posilka, data_base, chh, dayav, ddv, mmv, dayav2, mmv2, imya, gvozd, police, tolea_sdan, psiholog, paranoya_day, paranoya_shown, koncovka_active, mearephone, tolya_dialog, path_tolya, path_police, knj
     try:
         with open("save.json", "r") as f:
             save_data = json.load(f)
@@ -278,6 +279,7 @@ def load_game():
             vany = save_data.get("vany", 0)
             vanya = save_data.get("vanya", 0)
             ksosna = save_data.get("ksosna", 0)
+            darkness = save_data.get("darkness", 0)
             return True
     except FileNotFoundError:
         return False
@@ -377,6 +379,7 @@ vzorv = 0
 vany = 0
 vanya = 0
 ksosna = 0
+darkness = 0
 cooldowns = {
     "pomit": 0,
     "pomitp": 0,
@@ -827,7 +830,7 @@ def koncovka_dolgo():
     os._exit(0)
 
 async def main():
-    global pomit, pomitp, dike, ksosna, tormoz, vanya, musor, michc, sport, vany, vexi, ochkonet, knj, nevernulday, nevernul, dro, cdis, cdiss, igr, dss, drc, ochko, zvonok, zvv, rib, rrib, opencr, gamecorp, day, posilka, data_base, chh, dayav, dayav2, mmv, mmv2, imya, ddv, gvozd, in_action, tolea_sdan, psiholog, paranoya_day, paranoya_shown, koncovka_active, mearephone, tolya_dialog, path_tolya, path_police, police, vany
+    global pomit, pomitp, dike, ksosna, tormoz, darkness, vanya, musor, michc, sport, vany, vexi, ochkonet, knj, nevernulday, nevernul, dro, cdis, cdiss, igr, dss, drc, ochko, zvonok, zvv, rib, rrib, opencr, gamecorp, day, posilka, data_base, chh, dayav, dayav2, mmv, mmv2, imya, ddv, gvozd, in_action, tolea_sdan, psiholog, paranoya_day, paranoya_shown, koncovka_active, mearephone, tolya_dialog, path_tolya, path_police, police, vany
     
     global cooldowns
     cooldowns["call"] = time.time() + random.uniform(15.0, 40.0)
@@ -921,6 +924,8 @@ async def main():
                 available_calls.append(18)
             if day >= 5 and ksosna == 0:
                 available_calls.append(19)
+            if day >= 8 and darkness == 0:
+                available_calls.append(20)
             
             if len(available_calls) > 0 and not in_action:
                 zvv = True
@@ -2060,6 +2065,33 @@ async def main():
                             console.print(
                                 "Кот в сосне: мы вам перезвоним")
                             time.sleep(2)
+                    elif ra == 20:
+                        os.system('cls' if os.name == 'nt' else 'clear')
+                        console.print("(Данный диалог не несет оскорбительный характер и не призывает никого к скачиванию Запрещенного ПО)")
+                        time.sleep(1.2)
+                        console.print("xXx_darkness666_XxX: Далова а ты иглаеш в майнкрафт")
+                        time.sleep(2)
+                        console.print("Вы: А зачем тебе?")
+                        time.sleep(2)
+                        console.print("xXx_darkness666_XxX: Го длужить иглать в майнкрафт на минеблейзе")
+                        time.sleep(2)
+                        console.print("Вы: Я не играю на майнблейзе, говно это")
+                        time.sleep(2)
+                        console.print("xXx_darkness666_XxX: ну падем тогда на риливорлд")
+                        time.sleep(2)
+                        console.print("Вы: тоже говно какое то, предлагаю либо хайпиксель либо фантайм с софтом")
+                        time.sleep(2)
+                        console.print("xXx_darkness666_XxX: хайпиксел нада платит а фантайм с чем? что значит слово софт?")
+                        time.sleep(2)
+                        console.print("Вы: ну читы, эсли кратко")
+                        time.sleep(2)
+                        console.print("xXx_darkness666_XxX: читы эта плоха! ты плохой!")
+                        time.sleep(2)
+                        console.print("Вы: не спорю, но на фантайме все читерят, и нам можно")
+                        time.sleep(2)
+                        console.print("xXx_darkness666_XxX: Нет! ЭТО ПЛОХА!! ТЫ ПЛОХОЙ!!!!!")
+                        time.sleep(2)
+                        darkness = 1
                     else:
                         console.print("Вы упустили важное")
                     
