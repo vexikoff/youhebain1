@@ -214,13 +214,14 @@ def save_game():
         "vany": vany,
         "vanya": vanya,
         "ksosna": ksosna,
-        "darkness": darkness
+        "darkness": darkness,
+        "truba": truba
     }
     with open("save.json", "w") as f:
         json.dump(save_data, f)
 
 def load_game():
-    global ochko, pomit, chkj, ksosna, vzorv, vany, darkness, vanya, tormoz, ochkonet, netsv, nevernulday, mich, sport, michc, pomitp, nevernul, tolya22, daytolya, musor, cdis, vexi, cdiss, gamecorpscam, dro, igr, drc, dss, rib, juing, rrib, opencr, gamecorp, dike, day, posilka, data_base, chh, dayav, ddv, mmv, dayav2, mmv2, imya, gvozd, police, tolea_sdan, psiholog, paranoya_day, paranoya_shown, koncovka_active, mearephone, tolya_dialog, path_tolya, path_police, knj
+    global ochko, pomit, chkj, ksosna, truba, vzorv, vany, darkness, vanya, tormoz, ochkonet, netsv, nevernulday, mich, sport, michc, pomitp, nevernul, tolya22, daytolya, musor, cdis, vexi, cdiss, gamecorpscam, dro, igr, drc, dss, rib, juing, rrib, opencr, gamecorp, dike, day, posilka, data_base, chh, dayav, ddv, mmv, dayav2, mmv2, imya, gvozd, police, tolea_sdan, psiholog, paranoya_day, paranoya_shown, koncovka_active, mearephone, tolya_dialog, path_tolya, path_police, knj
     try:
         with open("save.json", "r") as f:
             save_data = json.load(f)
@@ -280,6 +281,7 @@ def load_game():
             vanya = save_data.get("vanya", 0)
             ksosna = save_data.get("ksosna", 0)
             darkness = save_data.get("darkness", 0)
+            truba = save_data.get("truba", 0)
             return True
     except FileNotFoundError:
         return False
@@ -380,6 +382,8 @@ vany = 0
 vanya = 0
 ksosna = 0
 darkness = 0
+truba = 0
+v220 = 0
 cooldowns = {
     "pomit": 0,
     "pomitp": 0,
@@ -830,7 +834,7 @@ def koncovka_dolgo():
     os._exit(0)
 
 async def main():
-    global pomit, pomitp, dike, ksosna, tormoz, darkness, vanya, musor, michc, sport, vany, vexi, ochkonet, knj, nevernulday, nevernul, dro, cdis, cdiss, igr, dss, drc, ochko, zvonok, zvv, rib, rrib, opencr, gamecorp, day, posilka, data_base, chh, dayav, dayav2, mmv, mmv2, imya, ddv, gvozd, in_action, tolea_sdan, psiholog, paranoya_day, paranoya_shown, koncovka_active, mearephone, tolya_dialog, path_tolya, path_police, police, vany
+    global pomit, v220, pomitp, dike, ksosna, tormoz, darkness, truba, vanya, musor, michc, sport, vany, vexi, ochkonet, knj, nevernulday, nevernul, dro, cdis, cdiss, igr, dss, drc, ochko, zvonok, zvv, rib, rrib, opencr, gamecorp, day, posilka, data_base, chh, dayav, dayav2, mmv, mmv2, imya, ddv, gvozd, in_action, tolea_sdan, psiholog, paranoya_day, paranoya_shown, koncovka_active, mearephone, tolya_dialog, path_tolya, path_police, police, vany
     
     global cooldowns
     cooldowns["call"] = time.time() + random.uniform(15.0, 40.0)
@@ -926,6 +930,12 @@ async def main():
                 available_calls.append(19)
             if day >= 8 and darkness == 0:
                 available_calls.append(20)
+            if day >= 8 and truba == 0:
+                available_calls.append(21)
+            if day >= 9 and truba == 1:
+                available_calls.append(22)
+            if day >= 2 and v220 == 0:
+                available_calls.append(23)
             
             if len(available_calls) > 0 and not in_action:
                 zvv = True
@@ -2092,6 +2102,88 @@ async def main():
                         console.print("xXx_darkness666_XxX: Нет! ЭТО ПЛОХА!! ТЫ ПЛОХОЙ!!!!!")
                         time.sleep(2)
                         darkness = 1
+                    elif ra == 21:
+                        os.system('cls' if os.name == 'nt' else 'clear')
+                        console.print("Гудки. Потом звук, будто кто-то дует в мокрую тряпку.")
+                        time.sleep(1.2)
+                        console.print("Труба: Алё. Не клади трубку. Я ещё не наговорила.")
+                        time.sleep(2)
+                        console.print("Вы: Кто это?")
+                        time.sleep(2)
+                        console.print("Труба: Труба. Та самая. Под раковиной. Помню твой номер. Помню, как ты мыл руки в 6:42. Слишком быстро.")
+                        time.sleep(2)
+                        console.print("Вы: Это ненормально!")
+                        time.sleep(2)
+                        console.print("Труба: Нормально — это когда вода течёт, а ты молчишь. А ты шуршал пакетом. Я всё слышу. У меня чугунная память.")
+                        time.sleep(2)
+                        console.print("Вы: Чего ты хочешь?")
+                        time.sleep(2)
+                        console.print("Труба: Хочу, чтобы ты перестал считать меня безмолвной. У меня есть достоинство. И засор.")
+                        time.sleep(2)
+                        console.print("Вы: Засор это не достоинство.")
+                        time.sleep(2)
+                        console.print("Труба: Для трубы — да. Я держу в себе всё: волосы, остатки ужина, твои секреты и одну монетку 2011 года. Монетка мне не нужна. Она без лицензии.")
+                        console.print(f"Вы: Нуууу...")
+                        console.print("[green]Выбор: [/]")
+                        console.print("[green]1. Извиниться перед трубой[/]")
+                        console.print("[yellow]2. Сказать, что труба просто труба[/]")
+                        console.print("[yellow]3. Спросить, откуда у неё номер.[/]")
+                        otzz21 = Prompt.ask(
+                            "ВЫБИРАЙ:",
+                            choices=["1", "2", "3"],
+                            default="1"
+                        )
+                        truba = 1
+                        save_game()
+                        if otzz21 == "1":
+                            time.sleep(1)
+                            console.print("Вы: Прости, я не знал, что ты... слушаешь.")
+                            time.sleep(2)
+                            console.print(
+                                "Труба: Хорошо. Я запишу. У меня тут журнал из накипи. Если повторится — буду капать на совесть.")
+                        elif otzz21 == "2":
+                            time.sleep(1)
+                            console.print("Вы: Ты кусок пластика. Не выдумывай.")
+                            time.sleep(2)
+                            console.print(
+                                "Труба: Ага. Просто труба. Которая помнит, как ты звал Толю шёпотом.")
+                            time.sleep(1)
+                            console.print("Вы: Какого Толю?")
+                            time.sleep(2)
+                            console.print(
+                                "Труба: Того, у кого телефон не звонит, а стучит. Я такие звуки узнаю.")
+                        elif otzz21  == "3":
+                            time.sleep(1)
+                            console.print("Вы: Откуда ты знаешь мой номер?")
+                            time.sleep(2)
+                            console.print(
+                                "Труба: Номер пришёл по стояку азбукой морзе, вот так прям: ---.. -....- ----. --... -.... -....- -.... ----- -....- ...-- ..---. От соседа, которого нет. Он оставил тебе долг в 3 литра горячей воды.")
+                            time.sleep(1)
+                            console.print("Вы: Какого соседа?")
+                            time.sleep(2)
+                            console.print(
+                                "Труба: Труба: Того, что жил выше. Теперь он живёт в сметане.")
+                    elif ra == 22:
+                        os.system('cls' if os.name == 'nt' else 'clear')
+                        time.sleep(1.2)
+                        console.print("Инспекция: Добрый день. Внеплановая проверка тапковой дисциплины.")
+                        time.sleep(2)
+                        console.print("Вы: ЧЕ ЗА ТАПКОВАЯ ДИСЦИПЛИНА?")
+                        time.sleep(2)
+                        console.print("Инспекция: Вы нарушили статью 14: несоответствие левой и правой части обуви.")
+                        time.sleep(2)
+                        console.print("Вы: У меня два тапка.")
+                        time.sleep(2)
+                        console.print("Инспекция: Оба левые. Это не обувь. Это философский протест.")
+                        time.sleep(2)
+                        console.print("Вы: Я не протестовал.")
+                        time.sleep(2)
+                        console.print("Инспекция: Протест зафиксирован. Левый тапок подал жалобу. Правый отсутствует, но морально присутствует.")
+                        time.sleep(2)
+                        console.print("Вы: Как правый может отсутствовать и присутствовать?")
+                        time.sleep(2)
+                        console.print("Инспекция: Это квантовая тапковая модель. Один тапок в стиралке, другой в загробном пространстве, третьего вообще нет.")
+                        time.sleep(2)
                     else:
                         console.print("Вы упустили важное")
                     
