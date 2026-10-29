@@ -2016,12 +2016,30 @@ async def main():
                         os.system('cls' if os.name == 'nt' else 'clear')
                         time.sleep(1.2)
                         console.print("Кот в сосне: Купите нашу крипту! Она вырастет в 1000 раз!")
-                        time.sleep(0.7)
+                        time.sleep(2.1)
                         console.print("Вы: че за крипта?")
-                        time.sleep(1)
-                        console.print("Ваня: я ваня, зачем ты моего друга обител?")
                         time.sleep(2)
-                    
+                        console.print("Кот в сосне: секрет, но она точно вырастет. Мы чувствуем.")
+                        time.sleep(2)
+                        console.print("Вы: вы не можете чувствовать")
+                        time.sleep(2)
+                        console.print("Кот в сосне: мы коты, мы чувствуем все, особенно деньги, 500 очков на крипту делай")
+                        time.sleep(2)
+                        console.print(f"Вы: Нуууу...")
+                        console.print("[green]Выбор: [/]")
+                        console.print("[green]1. Согласится[/]")
+                        console.print("[red]2. Отказатся[/]")
+                        otzz20 = Prompt.ask(
+                            "ВЫБИРАЙ:",
+                            choices=["1", "2"],
+                            default="1"
+                        )
+                        if otzz20 == "1":
+                            console.print("Вы: вы не можете чувствовать")
+                            time.sleep(2)
+                            console.print(
+                                "Кот в сосне: мы коты, мы чувствуем все, особенно деньги, 500 очков на крипту делай")
+                            time.sleep(2)
                     else:
                         console.print("Вы упустили важное")
                     
