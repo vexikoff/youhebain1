@@ -23,6 +23,7 @@ from textual.widgets import Input, Button
 from textual.containers import Horizontal, Vertical
 from textual.binding import Binding
 from cpuinfo import get_cpu_info
+import multiprocessing
 
 console = Console()
 
@@ -3340,6 +3341,7 @@ if __name__ == '__main__':
             # я сделал логику нажатия E максим. ну чтоб сюда зайти  на 1865 строке это я сделал. $-vexikoff
             
         elif int(ent) == 14:
+            multiprocessing.freeze_support()
             os.system('cls' if os.name == 'nt' else 'clear')
             app = SupportApp()
             result = app.run()
