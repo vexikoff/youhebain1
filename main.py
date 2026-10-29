@@ -216,7 +216,8 @@ def save_game():
         "ksosna": ksosna,
         "darkness": darkness,
         "truba": truba,
-        "v220": v220
+        "v220": v220,
+        "musordrop": musordrop
     }
     with open("save.json", "w") as f:
         json.dump(save_data, f)
@@ -284,6 +285,7 @@ def load_game():
             darkness = save_data.get("darkness", 0)
             truba = save_data.get("truba", 0)
             v220 = save_data.get("v220", 0)
+            musordrop = save_data.get("musordrop", 0)
             return True
     except FileNotFoundError:
         return False
@@ -386,6 +388,7 @@ ksosna = 0
 darkness = 0
 truba = 0
 v220 = 0
+musordrop = 0
 cooldowns = {
     "pomit": 0,
     "pomitp": 0,
