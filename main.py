@@ -215,7 +215,8 @@ def save_game():
         "vanya": vanya,
         "ksosna": ksosna,
         "darkness": darkness,
-        "truba": truba
+        "truba": truba,
+        "v220": v220
     }
     with open("save.json", "w") as f:
         json.dump(save_data, f)
