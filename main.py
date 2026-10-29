@@ -2038,7 +2038,7 @@ async def main():
                         console.print("*Трубка сброшена*")
                         # vanya == 0 # чобы не звонил повторно
                     elif ra == 18 and vany == 0:
-                        console.print("чтоб ошибка не мешала я уберу это потом")
+                        ra = random.choice(available_calls)
                     elif ra == 19:
                         os.system('cls' if os.name == 'nt' else 'clear')
                         time.sleep(1.2)
