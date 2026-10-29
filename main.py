@@ -2040,6 +2040,11 @@ async def main():
                             default="1"
                         )
                         if otzz20 == "1":
+                            if ochko >= 500:
+                                ochko -= 500
+                            else:
+                                ochko = 0
+                            save_game()
                             console.print("Вы: покупаю")
                             time.sleep(2)
                             console.print(
