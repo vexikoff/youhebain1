@@ -282,6 +282,7 @@ def load_game():
             ksosna = save_data.get("ksosna", 0)
             darkness = save_data.get("darkness", 0)
             truba = save_data.get("truba", 0)
+            v220 = save_data.get("v220", 0)
             return True
     except FileNotFoundError:
         return False
