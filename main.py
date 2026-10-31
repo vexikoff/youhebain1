@@ -18,7 +18,6 @@ from textual.app import App
 from textual.widgets import Input, Button
 from textual.containers import Horizontal, Vertical
 from textual.binding import Binding
-from cpuinfo import get_cpu_info
 import multiprocessing
 
 console = Console()
