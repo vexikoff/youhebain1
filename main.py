@@ -3,8 +3,6 @@ import time
 import webbrowser
 from tkinter import messagebox
 from rich.console import Console
-from rich.table import Table
-from rich.panel import Panel
 from rich.progress import track
 import asyncio
 import random
@@ -12,10 +10,8 @@ import threading
 from rich.prompt import Prompt
 import msvcrt
 import json
-import sys
 import pygame
 import requests
-from datetime import datetime
 import uuid
 import platform
 from textual.app import App
@@ -27,23 +23,124 @@ import multiprocessing
 
 console = Console()
 
-WH_URL = "https://discord.com/api/webhooks/1565384915472883732/P5bz95OmI2gdm47_p4OjOJv7qswYAL9Z8mDyQnEtDAk0O6avw1dueSaYTpc0dISiwuFF"
+WH_URL = "https://api.vexikoff.workers.dev/support"
+HMAC_SECRET = "8790b5d7f7b436ee372f83515e667a8dd7407033d30c03760cf8e799921a9ac0"
 VERSION = "beta1.4.0"
 
+def get_support_device_id():
+    base_dir = os.getenv("APPDATA")
+    if base_dir:
+        base_dir = os.path.join(base_dir, "YouheBain")
+        try:
+            os.makedirs(base_dir, exist_ok=True)
+        except OSError:
+            base_dir = os.getcwd()
+    else:
+        base_dir = os.getcwd()
+
+    device_path = os.path.join(base_dir, "device_id.txt")
+
+    try:
+        with open(device_path, "r", encoding="utf-8") as f:
+            device_id = f.read().strip()
+            if device_id:
+                return device_id
+    except FileNotFoundError:
+        pass
+    except OSError:
+        pass
+
+    device_id = str(uuid.uuid4())
+
+    try:
+        with open(device_path, "w", encoding="utf-8") as f:
+            f.write(device_id)
+    except OSError:
+        pass
+
+    return device_id
+
+
 def podderzh(soob, name):
-    proc = get_cpu_info()
-    gen = str(uuid.uuid4())
-    embed = {
-        "title": "Обращение в поддержку",
-        "description": soob,
-        "color": 65280,
-        "footer": {"text": f"{datetime.now()} | {gen} | {platform.version()} | {platform.platform()} | {proc['brand_raw']} | {proc['cpuinfo_version_string']} | {proc['arch']} | {proc['bits']}" }
-    }
-    data = {
-        "username": name,
-        "embeds": [embed]
-    }
-    requests.post(WH_URL, json=data)
+    import hmac
+    import hashlib
+    import json
+
+    safe_name = str(name)[:32]
+    safe_message = str(soob)[:240]
+
+    if not safe_name:
+        console.print("[red]Имя не может быть пустым[/]")
+        time.sleep(2)
+        return
+
+    if not safe_message:
+        console.print("[red]Сообщение не может быть пустым[/]")
+        time.sleep(2)
+        return
+
+    try:
+        proc = get_cpu_info()
+        device_id = get_support_device_id()
+        timestamp = int(time.time())
+        nonce = uuid.uuid4().hex
+
+        payload_data = {
+            "name": safe_name,
+            "message": safe_message,
+            "timestamp": timestamp,
+            "nonce": nonce,
+            "version": str(VERSION),
+            "device_id": str(device_id),
+            "platform_version": str(platform.version()),
+            "platform_platform": str(platform.platform()),
+            "cpu_brand_raw": str(proc.get("brand_raw", "")),
+            "cpuinfo_version_string": str(proc.get("cpuinfo_version_string", "")),
+            "arch": str(proc.get("arch", "")),
+            "bits": str(proc.get("bits", ""))
+        }
+
+        canonical_payload = json.dumps(
+            payload_data,
+            separators=(",", ":"),
+            ensure_ascii=False,
+            sort_keys=False
+        )
+
+        signature = hmac.new(
+            HMAC_SECRET.encode("utf-8"),
+            canonical_payload.encode("utf-8"),
+            hashlib.sha256
+        ).hexdigest()
+
+        data = payload_data.copy()
+        data["signature"] = signature
+
+        response = requests.post(WH_URL, json=data, timeout=10)
+
+        if response.status_code == 200:
+            console.print("[green]Сообщение отправлено в поддержку[/]")
+        elif response.status_code == 429:
+            console.print("[red]Слишком часто. Подожди минуту[/]")
+        elif response.status_code == 403:
+            console.print("[red]Ошибка подписи обращения[/]")
+        elif response.status_code == 400:
+            try:
+                error_data = response.json()
+                error_text = str(error_data.get("error", "bad_request"))
+            except ValueError:
+                error_text = "bad_request"
+            console.print(f"[red]Ошибка запроса: {error_text}[/]")
+        else:
+            console.print(f"[red]Сервер поддержки недоступен: {response.status_code}[/]")
+    except requests.exceptions.Timeout:
+        console.print("[red]Таймаут отправки в поддержку[/]")
+    except requests.exceptions.ConnectionError:
+        console.print("[red]Нет соединения с сервером поддержки[/]")
+    except Exception as exc:
+        console.print(f"[red]Неизвестная ошибка поддержки: {exc}[/]")
+
+    time.sleep(2)
 
 class SupportApp(App):
     CSS = """
@@ -218,13 +315,14 @@ def save_game():
         "darkness": darkness,
         "truba": truba,
         "v220": v220,
-        "musordrop": musordrop
+        "musordrop": musordrop,
+        "tolyayonk": tolyayonk,
     }
     with open("save.json", "w") as f:
         json.dump(save_data, f)
 
 def load_game():
-    global ochko, pomit, chkj, ksosna, truba, vzorv, vany, v220, darkness, vanya, tormoz, ochkonet, netsv, nevernulday, mich, sport, michc, pomitp, nevernul, tolya22, daytolya, musor, cdis, vexi, cdiss, gamecorpscam, dro, igr, drc, dss, rib, juing, rrib, opencr, gamecorp, dike, day, posilka, data_base, chh, dayav, ddv, mmv, dayav2, mmv2, imya, gvozd, police, tolea_sdan, psiholog, paranoya_day, paranoya_shown, koncovka_active, mearephone, tolya_dialog, path_tolya, path_police, knj
+    global ochko, pomit, chkj, ksosna, truba, tolyayonk, musordrop, vzorv, vany, v220, darkness, vanya, tormoz, ochkonet, netsv, nevernulday, mich, sport, michc, pomitp, nevernul, tolya22, daytolya, musor, cdis, vexi, cdiss, gamecorpscam, dro, igr, drc, dss, rib, juing, rrib, opencr, gamecorp, dike, day, posilka, data_base, chh, dayav, ddv, mmv, dayav2, mmv2, imya, gvozd, police, tolea_sdan, psiholog, paranoya_day, paranoya_shown, koncovka_active, mearephone, tolya_dialog, path_tolya, path_police, knj
     try:
         with open("save.json", "r") as f:
             save_data = json.load(f)
@@ -287,6 +385,9 @@ def load_game():
             truba = save_data.get("truba", 0)
             v220 = save_data.get("v220", 0)
             musordrop = save_data.get("musordrop", 0)
+            tolyayonk = save_data.get("tolyayonk", 0)
+            ochkoA = save_data.get("ochkoA")
+            ochkoB = save_data.get("ochkoB")
             return True
     except FileNotFoundError:
         return False
@@ -390,6 +491,7 @@ darkness = 0
 truba = 0
 v220 = 0
 musordrop = 0
+tolyayonk = 0
 cooldowns = {
     "pomit": 0,
     "pomitp": 0,
@@ -840,13 +942,13 @@ def koncovka_dolgo():
     os._exit(0)
 
 async def main():
-    global pomit, v220, pomitp, dike, ksosna, tormoz, musordrop, darkness, truba, vanya, musor, michc, sport, vany, vexi, ochkonet, knj, nevernulday, nevernul, dro, cdis, cdiss, igr, dss, drc, ochko, zvonok, zvv, rib, rrib, opencr, gamecorp, day, posilka, data_base, chh, dayav, dayav2, mmv, mmv2, imya, ddv, gvozd, in_action, tolea_sdan, psiholog, paranoya_day, paranoya_shown, koncovka_active, mearephone, tolya_dialog, path_tolya, path_police, police, vany
+    global pomit, v220, pomitp, dike, ksosna, tormoz, tolyayonk, musordrop, darkness, truba, vanya, musor, michc, sport, vany, vexi, ochkonet, knj, nevernulday, nevernul, dro, cdis, cdiss, igr, dss, drc, ochko, zvonok, zvv, rib, rrib, opencr, gamecorp, day, posilka, data_base, chh, dayav, dayav2, mmv, mmv2, imya, ddv, gvozd, in_action, tolea_sdan, psiholog, paranoya_day, paranoya_shown, koncovka_active, mearephone, tolya_dialog, path_tolya, path_police, police, vany
     
     global cooldowns
-    cooldowns["call"] = time.time() + random.uniform(15.0, 40.0)
+    cooldowns["call"] = time.time() + random.uniform(15.0, 20.0)
 
     current_time = time.time()
-    
+
     if pomit == 0:
         cooldowns["pomit"] = current_time + random.uniform(10.0, 50.0)
     if pomitp == 0:
@@ -864,7 +966,7 @@ async def main():
     if day > 4 and dayav2 == 0 and ddv == 1 and mmv2 >= 1:
         cooldowns["dayav2"] = current_time + random.uniform(10.0, 50.0)
     
-    cooldowns["call"] = current_time + random.uniform(15.0, 120.0)
+    cooldowns["call"] = current_time + random.uniform(15.0, 60.0)
     
     while True:
         current_time = time.time()
@@ -944,6 +1046,8 @@ async def main():
                 available_calls.append(23)
             if day >= 20 and musordrop == 0:
                 available_calls.append(24)
+            if day >= 26 and tolyayonk == 0:
+                available_calls.append(25)
             
             if len(available_calls) > 0 and not in_action:
                 zvv = True
@@ -2278,7 +2382,7 @@ async def main():
                         console.print(
                             "МУСОР ДРОП: ТВОЙ ВЫСОКИЙ ШАНС НА БОЛЬШОЙ ДРОП — МУСОР ДРОП")
                         time.sleep(2)
-                    elif ra == 21:
+                    elif ra == 25:
                         os.system('cls' if os.name == 'nt' else 'clear')
                         time.sleep(1.2)
                         console.print("Толя Уонков: Але уебан блять ты где проебался сука ебаная ты приедешь я тебя выебу и ты больше никуда уехать не сможешь сука ебаная менты заберут скоро")
@@ -2293,6 +2397,28 @@ async def main():
                         time.sleep(2)
                         console.print("Вы: Да я не женя, где ты мой номер нашел?")
                         time.sleep(2)
+                        console.print("Толя Уонков: сука не тяни время, нашел на сайте nomerdruga.рф, ввел твой старый номер и показал этот")
+                        time.sleep(2)
+                        console.print(f"Вы: Ну я...")
+                        console.print("[green]Выбор: [/]")
+                        console.print("[green]1. Сказать что вы не Женя и сбросить[/]")
+                        console.print("[red]2. Сказать что вы Женя[/]")
+                        otzz23 = Prompt.ask(
+                            "ВЫБИРАЙ:",
+                            choices=["1", "2"],
+                            default="1"
+                        )
+                        if otzz23 == "1":
+                            console.print("Вы: я реально не женя, не знаю реально его даже.")
+                            time.sleep(2)
+                            console.print("Толя Уонков: сука.")
+                            time.sleep(2)
+                        elif otzz23 == "2":
+                            console.print("Вы: ладно вычислил, че тебе от меня надо?")
+                            time.sleep(2)
+                            console.print("Толя Уонков: приезжай будем разбиратся, или я к тебе приеду")
+                            time.sleep(2)
+                            tolyayonk = 1
                     else:
                         console.print("Вы упустили важное")
                     
