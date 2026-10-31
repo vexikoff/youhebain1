@@ -28,7 +28,7 @@ import multiprocessing
 console = Console()
 
 WH_URL = "https://discord.com/api/webhooks/1565384915472883732/P5bz95OmI2gdm47_p4OjOJv7qswYAL9Z8mDyQnEtDAk0O6avw1dueSaYTpc0dISiwuFF"
-VERSION = "beta1.3.0"
+VERSION = "beta1.4.0"
 
 def podderzh(soob, name):
     proc = get_cpu_info()
@@ -2073,7 +2073,7 @@ async def main():
                             console.print(
                                 "Кот в сосне: отлично")
                             time.sleep(2)
-                            console.print("[white]Спустя день крипта упала в 0, рагпул. [/]")
+                            console.print("[white]Спустя час крипта упала в 0, рагпул. [/]")
                             time.sleep(2)
                             ksosna = 1
                             save_game()
@@ -2277,6 +2277,21 @@ async def main():
                         time.sleep(2)
                         console.print(
                             "МУСОР ДРОП: ТВОЙ ВЫСОКИЙ ШАНС НА БОЛЬШОЙ ДРОП — МУСОР ДРОП")
+                        time.sleep(2)
+                    elif ra == 21:
+                        os.system('cls' if os.name == 'nt' else 'clear')
+                        time.sleep(1.2)
+                        console.print("Толя Уонков: Але уебан блять ты где проебался сука ебаная ты приедешь я тебя выебу и ты больше никуда уехать не сможешь сука ебаная менты заберут скоро")
+                        time.sleep(2)
+                        console.print("Вы: Кто это?")
+                        time.sleep(2)
+                        console.print("Толя Уонков: Ты че меня забыл я толя, ты же Женя?")
+                        time.sleep(2)
+                        console.print("Вы: Нет, это не женя. Вы ошиблись номеров")
+                        time.sleep(2)
+                        console.print("Толя Уонков: Не пизди мне тут я знаю что ты женя, по голосу узнал тебя")
+                        time.sleep(2)
+                        console.print("Вы: Да я не женя, где ты мой номер нашел?")
                         time.sleep(2)
                     else:
                         console.print("Вы упустили важное")
